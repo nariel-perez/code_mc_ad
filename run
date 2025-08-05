@@ -1,0 +1,14 @@
+gfortran -c PBC_Mod.f90
+gfortran -c InputParams.f90
+gfortran -c SimulationData.f90
+gfortran -c PhysicalConstants.f90
+gfortran -c RotationModule.f90
+gfortran -c PotencialFF.f90
+gfortran -c Potencial.f90          # ← archivo recién modificado
+gfortran -c AdsorbateInput.f90
+gfortran -c Estructura.f90
+gfortran -c Main.f90
+gfortran -o mc_sim Main.o Potencial.o PotencialFF.o Estructura.o \
+          AdsorbateInput.o SimulationData.o InputParams.o PhysicalConstants.o \
+          PBC_Mod.o RotationModule.o
+
