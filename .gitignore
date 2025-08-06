@@ -1,0 +1,6 @@
+# Ignorar archivos temporales
+*.tmp
+*.log
+*.o
+*.mod
+
