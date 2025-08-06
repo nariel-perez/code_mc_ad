@@ -1,1 +1,0 @@
-# code_mc_ad
