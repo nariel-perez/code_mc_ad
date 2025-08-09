@@ -1,0 +1,36 @@
+rm -f *.o *.mod
+
+
+######################
+############ PROCESADO
+#si o si primero
+
+gfortran -O3  -c InputParams.f90
+gfortran -O3  -c AdsorbateInput.f90
+gfortran -O3  -c SimulationData.f90
+gfortran -O3  -c ConstantsModule.f90
+gfortran -O3  -c RotationModule.f90
+
+
+
+#########
+#Lectura de estrucuturas y calculo de potenciales
+gfortran -O3  -c PotencialFF.f90
+gfortran -O3  -c Potencial.f90
+gfortran -O3  -c Estructura.f90
+
+
+
+gfortran -O3  -c Main.f90
+
+
+######
+###compilacion 
+# Link all compiled object files into the final executable
+gfortran -O3  -o mc.exe \
+    InputParams.o AdsorbateInput.o ConstantsModule.o SimulationData.o RotationModule.o  Estructura.o Potencial.o PotencialFF.o Main.o
+
+# Remove object files after successful compilation
+rm *.o
+rm *.mod
+
