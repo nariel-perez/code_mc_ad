@@ -1,14 +1,30 @@
+
+gfortran -c Ranf.f90
 gfortran -c PBC_Mod.f90
 gfortran -c InputParams.f90
-gfortran -c SimulationData.f90
 gfortran -c PhysicalConstants.f90
 gfortran -c RotationModule.f90
-gfortran -c PotencialFF.f90
-gfortran -c Potencial.f90          # ← archivo recién modificado
+gfortran -c SimulationData.f90
 gfortran -c AdsorbateInput.f90
+gfortran -c GeomUtils.f90
 gfortran -c Estructura.f90
+gfortran -c PotencialFF.f90
+gfortran -c Potencial.f90
+gfortran -c Potout.f90
+gfortran -c Adpotout.f90
+gfortran -c Adpotin.f90
+gfortran -c Potin.f90
+gfortran -c In.f90
+gfortran -c Out.f90
+gfortran -c Move.f90
+gfortran -c Add.f90
+gfortran -c Remove.f90
+gfortran -c estadistica.f90
+gfortran -c change.f90
 gfortran -c Main.f90
-gfortran -o mc_sim Main.o Potencial.o PotencialFF.o Estructura.o \
-          AdsorbateInput.o SimulationData.o InputParams.o PhysicalConstants.o \
-          PBC_Mod.o RotationModule.o
+
+gfortran -o mc_triclinic Main.o Potout.o Potin.o Potencial.o PotencialFF.o \
+  Estructura.o GeomUtils.o AdsorbateInput.o SimulationData.o RotationModule.o \
+  PhysicalConstants.o InputParams.o PBC_Mod.o Adpotout.o Adpotin.o In.o Out.o \
+  Move.o Add.o Remove.o estadistica.o change.o Ranf.o
 

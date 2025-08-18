@@ -9,9 +9,9 @@ MODULE SimulationData
   
   ! BLOCK1: Main Simulation Variables
   
-  REAL, allocatable :: RX(:,:,:), RY(:,:,:), RZ(:,:,:)
+  REAL(rk), allocatable :: RX(:,:,:), RY(:,:,:), RZ(:,:,:)
   !INTEGER :: NMOLEC!
-  REAL, allocatable :: EPSI(:), SIGM(:), Q(:)
+  REAL(rk), allocatable :: EPSI(:), SIGM(:), Q(:)
   ! REAL, allocatable :: RX0(:,:), RY0(:,:), RZ0(:,:), NATOMKIND(:,:)
   !REAL, allocatable :: tmp_RX0(:,:), tmp_RY0(:,:), tmp_RZ0(:,:)
   ! REAL, allocatable :: tmp_NATOM(:,:)

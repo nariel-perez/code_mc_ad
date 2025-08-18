@@ -1,96 +1,185 @@
 !─────────────────────────────────────────────────────────────────
+! File: Estructura.f90   (Fortran 90/2003)
+! Lectura de la superficie (grafito) y armado de arreglos internos.
+! GENERALIZADO a celda triclinic:
+!   - r[Å] -> s = Ainv*r  (fraccional)
+!   - wrap SOLO en ejes con PBC
+!   - aceptar |s_i| < 0.5  (celda primaria, evita doble conteo)
+!   - guardar en reducidas: RXC = RXA/sigmetano * sigma  (= RXA/ACEL)
+!─────────────────────────────────────────────────────────────────
 module EstructuraModule
-   use InputParams,      only : cell             ! celda activa
-   use PBC_Mod,          only : rk, cart_to_frac, wrap_frac_centered, frac_to_cart
-   use PhysicalConstants 
-   use SimulationData    
-   implicit none
-   private
-   public :: estructura
+  use InputParams,       only: cell, sigmetano, acelx, acely, acelz
+  use PhysicalConstants, only: FACTORELEC, FCLEC
+  use SimulationData,    only: RXC, RYC, RZC, QAC, EPSAC, SGC, SYMBOL
+  use PBC_mod, only: rk
+  implicit none
 contains
-!=================================================================
-subroutine estructura(eps, nam, sigma, sigmetano, NC, diel)
-   implicit none
-   !------------------ argumentos --------------------------------
-   character(len=*), intent(in) :: nam
-   real(rk),        intent(in)  :: eps, sigma, sigmetano, diel
-   integer,         intent(inout) :: NC     ! se actualiza al número final
 
-   !------------------ variables internas ------------------------
-   integer :: i, ios, imax
-   character(len=32) :: nampro
-   real(rk) :: r_cart(3), s(3)
-   real(rk), allocatable :: RXA(:), RYA(:), RZA(:)
+  subroutine estructura(eps, nam, sigma, sigmetano_in, NC, diel)
+    implicit none
+    ! Inputs
+    real(rk),               intent(in)    :: eps, sigma, sigmetano_in, diel
+    character(len=*),   intent(in)    :: nam
+    ! In/Out
+    integer,            intent(inout) :: NC
 
-   !------------------ abrir archivo de estructura ---------------
-   open(unit=15, file=trim(nam), status='old', action='read', iostat=ios)
-   if (ios /= 0) then
-      write(*,*) 'ERROR: no se pudo abrir ', trim(nam)
+    ! Locals
+    integer :: ios, i, imax
+    character(len=32) :: nampro
+
+    ! Datos leídos (físicos, en Å)
+    real(rk),    allocatable :: RXA(:), RYA(:), RZA(:), EPSA(:), SGCA(:), QACA_phys(:)
+    integer, allocatable :: SYMA(:)
+
+    ! Copias de los aceptados (para truncado.txt)
+    real(rk),    allocatable :: RXA_in(:), RYA_in(:), RZA_in(:), EPSA_in(:), SGCA_in(:), QACA_in_phys(:)
+    integer, allocatable :: SYMA_in(:)
+
+    ! Vectores para filtro fraccional
+    real(rk) :: r(3), s(3), s0(3)
+    logical :: inside
+
+    ! Archivos
+    integer, parameter :: iu_in=51, iu_dbg=49, iu_out=52
+
+    !--------------------------
+    ! Abrir archivos
+    !--------------------------
+    open(iu_dbg, file='PRUEBA.TXT', status='replace', action='write', iostat=ios)
+    if (ios /= 0) then
+      print *, 'Error: no se pudo abrir PRUEBA.TXT'
       return
-   end if
+    end if
 
-   read(15,*,iostat=ios) NC
-   if (ios /= 0 .or. NC<=0) then
-      write(*,*) 'ERROR al leer número de átomos en ', trim(nam)
-      close(15); return
-   end if
+    open(iu_in, file=trim(nam), status='old', action='read', iostat=ios)
+    if (ios /= 0) then
+      print *, 'Error: no se pudo abrir ', trim(nam)
+      close(iu_dbg)
+      return
+    end if
 
-   !------------------ alocar arrays temporales ------------------
-   allocate(RXA(NC), RYA(NC), RZA(NC))
-   if (.not. allocated(RXC))    allocate(RXC(NC))
-   if (.not. allocated(RYC))    allocate(RYC(NC))
-   if (.not. allocated(RZC))    allocate(RZC(NC))
-   if (.not. allocated(QAC))    allocate(QAC(NC))
-   if (.not. allocated(EPSAC))  allocate(EPSAC(NC))
-   if (.not. allocated(SGC))    allocate(SGC(NC))
-   if (.not. allocated(SYMBOL)) allocate(SYMBOL(NC))
+    !--------------------------
+    ! Leer NC y reservar
+    !--------------------------
+    read(iu_in, *, iostat=ios) NC
+    if (ios /= 0 .or. NC <= 0) then
+      print *, 'Error: NC inválido en ', trim(nam)
+      close(iu_in); close(iu_dbg)
+      return
+    end if
 
-   !------------------ lectura y envoltura -----------------------
-   imax = 0
-   do i = 1, NC
-      read(15,*,iostat=ios) r_cart(1), r_cart(2), r_cart(3), &
-                            EPSAC(i), SGC(i), QAC(i), SYMBOL(i)
+    allocate(RXA(NC), RYA(NC), RZA(NC), EPSA(NC), SGCA(NC), QACA_phys(NC), SYMA(NC), stat=ios)
+    if (ios /= 0) then
+      print *, 'Error: no se pudo reservar memoria de lectura'
+      close(iu_in); close(iu_dbg)
+      return
+    end if
+
+    !--------------------------
+    ! Leer líneas (Å, físicas)
+    !--------------------------
+    do i = 1, NC
+      read(iu_in, *, iostat=ios) RXA(i), RYA(i), RZA(i), EPSA(i), SGCA(i), QACA_phys(i), SYMA(i)
       if (ios /= 0) then
-         write(*,*) 'ERROR leyendo línea ', i, ' en ', trim(nam)
-         close(15); return
+        print *, 'Error: fallo leyendo línea ', i, ' en ', trim(nam)
+        close(iu_in); close(iu_dbg)
+        return
       end if
+    end do
+    close(iu_in)
 
-      ! → fraccional + wrap a [-0.5,0.5)
-      s  = cart_to_frac(cell, r_cart)
-      s  = wrap_frac_centered(cell, s)
+    print *, 'Dimensiones celda (l/2): ', acelx/2.0, acely/2.0, acelz/2.0
 
-      ! → de vuelta a cartesiano (ya dentro de la celda)
-      r_cart = frac_to_cart(cell, s)
+    !--------------------------
+    ! Contar aceptados (fraccional + wrap por PBC, general)
+    !--------------------------
+    imax = 0
+    do i = 1, NC
+      r  = (/ RXA(i), RYA(i), RZA(i) /)          ! Å
+      s0 = matmul(cell%Ainv, r)                  ! Å -> frac
+      s  = s0
+      where (cell%pbc) s = s - nint(s)           ! envolver SOLO ejes con PBC
+      inside = (abs(s(1)) < 0.5) .and. (abs(s(2)) < 0.5) .and. (abs(s(3)) < 0.5)
+      if (inside) imax = imax + 1
+    end do
 
-      imax = imax + 1
-      RXC(imax) = r_cart(1) / sigmetano * sigma
-      RYC(imax) = r_cart(2) / sigmetano * sigma
-      RZC(imax) = r_cart(3) / sigmetano * sigma
-      QAC(imax) = QAC(i) * FACTORELEC * FCLEC
-   end do
-   close(15)
+    ! Reservar globales + buffers truncados
+    if (.not. allocated(RXC))   allocate(RXC(imax))
+    if (.not. allocated(RYC))   allocate(RYC(imax))
+    if (.not. allocated(RZC))   allocate(RZC(imax))
+    if (.not. allocated(QAC))   allocate(QAC(imax))
+    if (.not. allocated(EPSAC)) allocate(EPSAC(imax))
+    if (.not. allocated(SGC))   allocate(SGC(imax))
+    if (.not. allocated(SYMBOL))allocate(SYMBOL(imax))
 
-   NC = imax               ! número real de átomos almacenados
-   write(*,'(A,I0)') 'Estructura leída, ', NC, ' segmentos dentro de la celda.'
+    allocate(RXA_in(imax), RYA_in(imax), RZA_in(imax), EPSA_in(imax), SGCA_in(imax), QACA_in_phys(imax), SYMA_in(imax), stat=ios)
+    if (ios /= 0) then
+      print *, 'Error: no se pudo reservar buffers truncados'
+      close(iu_dbg)
+      return
+    end if
 
-   !------------------ escribir archivo truncado -----------------
-   nampro = 'truncado.txt'
-   open(unit=16, file=nampro, status='replace', iostat=ios)
-   if (ios == 0) then
-      write(16,*) NC
-      do i = 1, NC
-         write(16,'(3F12.6,3F10.4,I4)') &
-              RXC(i)*sigmetano/sigma, RYC(i)*sigmetano/sigma, RZC(i)*sigmetano/sigma, &
-              EPSAC(i), SGC(i), QAC(i)/(FCLEC*FACTORELEC), SYMBOL(i)
-      end do
-      close(16)
-   else
-      write(*,*) 'AVISO: no se pudo escribir ', nampro
-   end if
+    !--------------------------
+    ! Copiar/convertir aceptados
+    !--------------------------
+    imax = 0
+    do i = 1, NC
+      r  = (/ RXA(i), RYA(i), RZA(i) /)
+      s0 = matmul(cell%Ainv, r)
+      s  = s0
+      where (cell%pbc) s = s - nint(s)
+      inside = (abs(s(1)) < 0.5) .and. (abs(s(2)) < 0.5) .and. (abs(s(3)) < 0.5)
+      if (inside) then
+        imax = imax + 1
 
-   !------------------ liberar temporales ------------------------
-   deallocate(RXA, RYA, RZA)
-end subroutine estructura
-!=================================================================
+        ! Unidades reducidas (= RXA/ACEL)
+        RXC(imax) = RXA(i) / sigmetano * sigma
+        RYC(imax) = RYA(i) / sigmetano * sigma
+        RZC(imax) = RZA(i) / sigmetano * sigma
+
+        EPSAC(imax) = EPSA(i)
+        SGC(imax)   = SGCA(i)
+        QAC(imax)   = QACA_phys(i) * FACTORELEC * FCLEC
+        SYMBOL(imax)= SYMA(i)
+
+        write(iu_dbg, *) RXC(imax), RYC(imax), RZC(imax)
+
+        ! Guardar originales (para truncado.txt)
+        RXA_in(imax)      = RXA(i)
+        RYA_in(imax)      = RYA(i)
+        RZA_in(imax)      = RZA(i)
+        EPSA_in(imax)     = EPSA(i)
+        SGCA_in(imax)     = SGCA(i)
+        QACA_in_phys(imax)= QACA_phys(i)
+        SYMA_in(imax)     = SYMA(i)
+      end if
+    end do
+    close(iu_dbg)
+
+    NC = imax
+    print *, 'Estructura leída, ', NC, ' segmentos dentro de la celda.'
+
+    !--------------------------
+    ! Escribir truncado.txt en unidades físicas
+    !--------------------------
+    nampro = trim(nam)//'_truncado'
+    open(iu_out, file='truncado.txt', status='replace', action='write', iostat=ios)
+    if (ios /= 0) then
+      print *, 'Error: no se pudo abrir ', trim(nampro)
+      return
+    end if
+    write(iu_out, *) NC
+    do i = 1, NC
+      write(iu_out, '(3F12.6,2F12.6,F12.6,1X,I0)') RXA_in(i), RYA_in(i), RZA_in(i), &
+                                                    EPSA_in(i), SGCA_in(i), QACA_in_phys(i), SYMA_in(i)
+    end do
+    close(iu_out)
+
+    ! Limpieza
+    deallocate(RXA, RYA, RZA, EPSA, SGCA, QACA_phys, SYMA)
+    deallocate(RXA_in, RYA_in, RZA_in, EPSA_in, SGCA_in, QACA_in_phys, SYMA_in)
+
+  end subroutine estructura
+
 end module EstructuraModule
 

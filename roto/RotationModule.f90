@@ -1,13 +1,17 @@
 MODULE RotationModule
-    IMPLICIT NONE
+  USE PBC_mod, only: rk
+
+  
+  IMPLICIT NONE
+  
 
     ! Constants
     INTEGER, PARAMETER :: TABLA_SIZE = 1000  ! Number of precomputed values
-    REAL, PARAMETER :: PI = 3.14159
-    REAL, PARAMETER :: PASO = (2.0*PI )/ (TABLA_SIZE - 1)  ! Step size
+    REAL(rk), PARAMETER :: PI = 3.14159_rk
+    REAL(rk), PARAMETER :: PASO = (2.0_rk*PI )/ (TABLA_SIZE - 1)  ! Step size
 
     ! Lookup tables for sine and cosine values
-    REAL, DIMENSION(TABLA_SIZE) :: TABLE_SEN, TABLE_COS
+    REAL(rk), DIMENSION(TABLA_SIZE) :: TABLE_SEN, TABLE_COS
 
 CONTAINS
 
@@ -17,7 +21,7 @@ CONTAINS
     SUBROUTINE InitRotationTables()
         IMPLICIT NONE
         INTEGER :: I
-        REAL :: ANGULO
+        REAL(rk) :: ANGULO
 
         DO I = 1, TABLA_SIZE
             ANGULO = -PI + (REAL(I-1) * PASO)  ! Angle in [-pi , pi]
@@ -31,10 +35,10 @@ CONTAINS
     !------------------------------------------------------
     SUBROUTINE GetRotationMatrix(DX, DY, DZ, R)
         IMPLICIT NONE
-        REAL, INTENT(IN) :: DX, DY, DZ
-        REAL, DIMENSION(3,3), INTENT(OUT) :: R
+        REAL(rk), INTENT(IN) :: DX, DY, DZ
+        REAL(rk), DIMENSION(3,3), INTENT(OUT) :: R
         INTEGER :: INDICE_DX, INDICE_DY, INDICE_DZ
-        REAL :: SEN_DX, COS_DX, SEN_DY, COS_DY, SEN_DZ, COS_DZ
+        REAL(rk) :: SEN_DX, COS_DX, SEN_DY, COS_DY, SEN_DZ, COS_DZ
 
 
         
