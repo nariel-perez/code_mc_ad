@@ -1,0 +1,2 @@
+condor_compile gfortran -O3 -mcmodel=medium namd1.f namd2.f Add.for Adpotin.for Adpotout.for change.for estadistica.for Estructura.for In.for Main.for Move.for Out.for Potencial.for PotencialFF.for Potin.for Potout.f
+or Ranf.for Remove.for -o GMC.exe

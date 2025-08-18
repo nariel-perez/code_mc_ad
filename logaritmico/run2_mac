@@ -1,0 +1,21 @@
+gfortran -O3  -c namd1.f
+gfortran -O3  -c namd2.f
+gfortran -O3  -c Add.for
+gfortran -O3  -c Adpotin.for
+gfortran -O3  -c Adpotout.for
+gfortran -O3  -c change.for
+gfortran -O3  -c estadistica.for
+gfortran -O3  -c Estructura.for
+gfortran -O3  -c In.for
+gfortran -O3  -c Main.for
+gfortran -O3  -c Move.for
+gfortran -O3  -c Out.for
+gfortran -O3  -c Potencial.for
+gfortran -O3  -c PotencialFF.for
+gfortran -O3  -c Potin.for
+gfortran -O3  -c Potout.for
+gfortran -O3  -c Ranf.for
+gfortran -O3  -c Remove.for
+gfortran -O3  namd1.o namd2.o Add.o Adpotin.o Adpotout.o change.o estadistica.o Estructura.o In.o Main.o Move.o Out.o Potencial.o PotencialFF.o Potin.o Potout.o Ranf.o Remove.o -o GMC.exe
+
+rm *.o
