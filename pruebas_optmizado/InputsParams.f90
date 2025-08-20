@@ -5,8 +5,8 @@
 ! para simulaciones computacionales.
 !--------------------------------------------------------------------
 module InputParams
-    use, intrinsic :: iso_fortran_env, only : rk => real64, output_unit
-    use PBC_Mod, only : Cell_t => Cell, cell_from_lengths_angles
+    use, intrinsic :: iso_fortran_env, only : output_unit
+    use PBC_Mod, only : Cell_t => Cell, cell_from_lengths_angles,rk
     implicit none
     private
 
