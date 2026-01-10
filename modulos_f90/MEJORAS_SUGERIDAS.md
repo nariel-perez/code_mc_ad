@@ -245,3 +245,14 @@ deallocate(NATOM)
 - **Mejora de legibilidad**: Alta
 - **Riesgo de cambios**: Bajo (solo correcciones críticas)
 - **Mejora de mantenibilidad**: Media-Alta
+
+---
+
+## ✅ ESTADO DE REVISION Y CAMBIOS REALIZADOS
+
+### Revisadas y realizadas
+1. ✅ Corregir `nmin, nmaxi` en `call out(...)` (aplicado en `Main.f90`).
+2. ✅ Corregir índice `I` fuera de bucle en línea 346 (aplicado en `Main.f90`).
+
+### Revisadas y no aplicadas
+- (pendiente)

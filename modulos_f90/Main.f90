@@ -343,8 +343,10 @@ program main
       end do
       
       write(*,*) VA, VG, V, ' Energias Iniciales'
-      anprom(I) = 0
-      ntotal(i) = 0
+      do I = 1, NMOLEC
+         anprom(I) = 0
+         ntotal(I) = 0
+      end do
    end if
 
    ! -------------------------------------------------------------
@@ -430,7 +432,7 @@ program main
             goto 40
             
 20          call out(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos, &
-                 nmin, nmaxi, canonicalmolecules)
+                 canonicalmolecules)
             goto 40
             
 30          call move(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
