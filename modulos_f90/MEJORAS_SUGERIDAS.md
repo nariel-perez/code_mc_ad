@@ -253,6 +253,7 @@ deallocate(NATOM)
 ### Revisadas y realizadas
 1. ✅ Corregir `nmin, nmaxi` en `call out(...)` (aplicado en `Main.f90`).
 2. ✅ Corregir índice `I` fuera de bucle en línea 346 (aplicado en `Main.f90`).
+3. ✅ Eliminar `close(21)` y `close(22)` (aplicado en `Main.f90`).
 
 ### Revisadas y no aplicadas
 - (pendiente)

@@ -622,8 +622,6 @@ program main
       write(*,*) P, ANPROM(1:NMOLEC), CALOR, 8.31*T - CALORG, CALORA
       close(40)
       close(41)
-      close(21)
-      close(22)
       
       AN  = 0
       AN1 = 0
