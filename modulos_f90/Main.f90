@@ -84,7 +84,6 @@ program main
    
    real               p_ratio
    real, allocatable:: p_vals(:), Z(:)
-   integer           NMAX
    integer           NTOTALP, NTOTALB
    real              RXNEW, RYNEW, RZNEW
    real              V, VA, VG, u2
@@ -94,12 +93,9 @@ program main
    real              TEMP
    real              SIGMA
    real              RCUT
-   real              RMIN
    real              ANPROM(10)
-   logical           OVRLAP
    logical           CREATE
    logical           GHOST
-   character(len=16) MOLEC1
    character(len=3)  CONFIG
    character(len=3)  CONFAT
    character(len=3)  CONFNAT
@@ -110,9 +106,7 @@ program main
    real              VOL, XMAX, YMAX, ZMAX
    integer           NC
    integer           I, J
-   integer           NMATOM
    real              X1, Y1, Z1
-   integer           IKIND, NS
    integer           INMOLEC
    real              CR
    integer           IJ
@@ -122,7 +116,6 @@ program main
    real              N2
    real              AN1, U1, UNG1, UG1, UNA1, UA1, UN1, AN2
    real              CALOR, CALORG, CALORA
-   real              ESCALA
    real              RXAI, RYAI, RZAI, EPSAI, SGCI, QACI
    integer           SYMBOL2
    integer           K, jin
@@ -138,16 +131,12 @@ program main
    integer           ICNF, JCNF, KCNF
    integer           NATOMKINDI
    real              CALORESP1, CALORESP2, CALORESP3
-   integer           NCONFMIN, NCONFMAX
    integer           ntotalGRAF
-   real              escalax, escalay, escalaz
    integer           ensemble2
    real, parameter   :: AK_input = 8.31   ! constante de los gases en j/mol·K
    integer           auxmat
 
-
-
-
+   
    
    ! ================================================================
    ! =================== Inicio del programa =========================
@@ -184,7 +173,7 @@ program main
    p_ratio = (dp/p)**(1.0d0/ real(isot -1, kind = 8))
 
    p_vals(1) = p
-   do  i = 2, isot
+   do i = 2, isot
       p_vals(i) = p_vals(i-1)*p_ratio
    end do
    
@@ -194,7 +183,6 @@ program main
    ! ----------------------------------------------------------------
    SIGMA = sigmetano / acel
    TEMP  = T / eps
-   P     = P ! * 1333.22
    PRED  = P * SIGMA**3 / eps
    RCUT  = 10*SIGMA
    
@@ -401,9 +389,7 @@ program main
       ! Sub-bucle JPASOS
       do JPASOS = 1, ijpasos
          aitest76 = real(JPASOS)/500
-         write(58,*) aitest76
          aitest77 = aitest76 - int(aitest76)
-         MULT     = 1
 
          if (aitest77.eq.0) then
             write(*,*) JPASOS, N(1:NMOLEC)
@@ -422,25 +408,25 @@ program main
          end if
          
          do KPASOS = 1, ikpasos*MULT
-            ! Elección del paso con goto
-            IJ = ranf(DUMMY)*3 + 1
-            if (ensemble.eq.0) goto 30
-            goto (10,20,30,35) IJ
-            
-10          call in(temp, z, sigma, eps, rcut, v, va, vg, w, create, cr, jpasos, &
-                 canonicalmolecules)
-            goto 40
-            
-20          call out(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos, &
-                 canonicalmolecules)
-            goto 40
-            
-30          call move(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
-            goto 40
-            
-35          call change(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
-            
-40       end do
+            ! Elección del paso
+            if (ensemble == 0) then
+               call move(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
+            else
+               IJ = int(ranf(DUMMY)*4) + 1
+               select case (IJ)
+               case (1)
+                  call in(temp, z, sigma, eps, rcut, v, va, vg, w, create, cr, jpasos, &
+                       canonicalmolecules)
+               case (2)
+                  call out(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos, &
+                       canonicalmolecules)
+               case (3)
+                  call move(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
+               case (4)
+                  call change(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
+               end select
+            end if
+         end do
 
          ! Reescalado de energías
          V  = V * eps
@@ -532,8 +518,6 @@ program main
       ANN = AN2 - AN1**2
       write(*,*) ANN, ' ANN'
 
-      ESCALA = acel
-      
       CALOR  = 8.3144*T - ((UN1 - U1*AN1)/ (ANN))*8.31
       CALORG = (UNG1 - UG1*AN1)/ (ANN)*8.31
       CALORA = -((UNA1 - UA1*AN1)/ (ANN))*8.31
@@ -554,15 +538,11 @@ program main
       write(*,*) ntotalGRAF
       write(*,*) ' '
       
-      escalax = acelx
-      escalay = acely
-      escalaz = acelz
-      write(*,*) escalax, escalay, escalaz
+      write(*,*) acelx, acely, acelz
       
       do I = 1, NC
          read(49,*) RXAI, RYAI, RZAI, EPSAI, SGCI, QACI, SYMBOL2
          write(40,*) SYMBOL2, RXAI, RYAI, RZAI
-         ntotalGRAF = NC
       end do
       close(49)
 
@@ -570,9 +550,9 @@ program main
          do j = 1, N(I)
             jin = locate(j,I)
             do k = 1, NATOM(I)
-               RXN = RX(jin,k,I)*ESCALA
-               RYN = RY(jin,k,I)*ESCALA
-               RZN = RZ(jin,k,I)*ESCALA
+               RXN = RX(jin,k,I)*acel
+               RYN = RY(jin,k,I)*acel
+               RZN = RZ(jin,k,I)*acel
                write(40,*) NSYM(k,I), RXN, RYN, RZN
             end do
          end do
@@ -581,10 +561,6 @@ program main
       do i = 1, NMOLEC
          write(*,*) i, N(i), NATOM(i), ' i natom main'
       end do
-      
-      if (ensemble2.eq.3) then
-         ! (colocar aquí lógica adicional si aplica)
-      end if
       
       ! Estadística espacial CNF
       do I = 1, NMOLEC

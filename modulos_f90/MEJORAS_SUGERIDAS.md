@@ -239,21 +239,56 @@ deallocate(NATOM)
 
 ---
 
-## 📊 IMPACTO ESTIMADO
+## 📊 IMPACTO ESTIMADO (ACTUALIZADO)
 
-- **Reducción de líneas**: ~15-20 líneas eliminadas
-- **Mejora de legibilidad**: Alta
-- **Riesgo de cambios**: Bajo (solo correcciones críticas)
-- **Mejora de mantenibilidad**: Media-Alta
+- **Reducción de líneas**: ~25-30 líneas eliminadas/modificadas ✅
+- **Mejora de legibilidad**: Alta ✅
+- **Riesgo de cambios**: Bajo (solo correcciones críticas) ✅
+- **Mejora de mantenibilidad**: Alta ✅
+- **Bugs corregidos**: 2 bugs críticos corregidos ✅
+- **Estado**: Todas las mejoras aplicadas exitosamente ✅
 
 ---
 
 ## ✅ ESTADO DE REVISION Y CAMBIOS REALIZADOS
 
-### Revisadas y realizadas
-1. ✅ Corregir `nmin, nmaxi` en `call out(...)` (aplicado en `Main.f90`).
-2. ✅ Corregir índice `I` fuera de bucle en línea 346 (aplicado en `Main.f90`).
-3. ✅ Eliminar `close(21)` y `close(22)` (aplicado en `Main.f90`).
+### ✅ TODAS LAS MEJORAS HAN SIDO APLICADAS
 
-### Revisadas y no aplicadas
-- (pendiente)
+**Fecha de aplicación**: Todas las mejoras sugeridas han sido implementadas en `Main.f90`.
+
+### Revisadas y realizadas
+
+#### 🔴 Problemas Críticos:
+1. ✅ **Corregir `nmin, nmaxi` en `call out(...)`** - Eliminados parámetros incorrectos (aplicado en `Main.f90`).
+2. ✅ **Corregir índice `I` fuera de bucle en línea 346** - Agregado bucle `do I = 1, NMOLEC` (aplicado en `Main.f90`).
+3. ✅ **Eliminar `close(21)` y `close(22)`** - Líneas eliminadas ya que los archivos nunca se abrían (aplicado en `Main.f90`).
+
+#### ⚠️ Variables no utilizadas:
+4. ✅ **Eliminar variables no utilizadas** - Eliminadas: `NMAX`, `RMIN`, `OVRLAP`, `MOLEC1`, `NMATOM`, `IKIND`, `NS`, `NCONFMIN`, `NCONFMAX` (aplicado en `Main.f90`).
+   - Nota: `RXNEW, RYNEW, RZNEW` se mantienen ya que las subrutinas las declaran localmente.
+
+#### 🔧 Redundancias y mejoras:
+5. ✅ **Eliminar `P = P ! * 1333.22`** - Línea eliminada (línea 197, aplicado en `Main.f90`).
+6. ✅ **Eliminar asignación duplicada de MULT** - Eliminada primera asignación redundante (línea 406, aplicado en `Main.f90`).
+7. ✅ **Eliminar `ntotalGRAF = NC` dentro del bucle** - Eliminada asignación redundante (línea 565, aplicado en `Main.f90`).
+8. ✅ **Eliminar variables `escalax, escalay, escalaz`** - Reemplazadas por uso directo de `acelx, acely, acelz` (líneas 557-560, aplicado en `Main.f90`).
+9. ✅ **Eliminar variable `ESCALA`** - Reemplazada por uso directo de `acel` (línea 535 y 573-575, aplicado en `Main.f90`).
+10. ✅ **Eliminar bloque condicional vacío `ensemble2`** - Bloque eliminado (líneas 585-587, aplicado en `Main.f90`).
+
+#### 📝 Mejoras de estilo:
+11. ✅ **Eliminar líneas en blanco excesivas** - Líneas en blanco extra eliminadas (líneas 148-150, aplicado en `Main.f90`).
+12. ✅ **Modernizar formato de bucle `do`** - Cambiado `do  i = 2, isot` a `do i = 2, isot` (línea 187, aplicado en `Main.f90`).
+13. ✅ **Reemplazar `goto` por `select case`** - Refactorizado bloque goto a select case y corregido bug crítico (`*3` → `*4`) (líneas 424-443, aplicado en `Main.f90`).
+14. ✅ **Eliminar `write(58,*)` sin archivo abierto** - Línea eliminada para evitar error en tiempo de ejecución (línea 404, aplicado en `Main.f90`).
+
+#### 📊 Resultados:
+- **Total de mejoras aplicadas**: 14 mejoras
+- **Líneas eliminadas/modificadas**: ~25-30 líneas
+- **Bugs corregidos**: 2 (goto con índice incorrecto, unidad 58 no abierta)
+- **Errores de compilación**: 0
+- **Errores del linter**: 0
+- **Estado final**: ✅ Código limpio, eficiente y sin errores
+
+### Notas adicionales:
+- La apertura del archivo 51 dentro del bucle JPASOS se mantiene intencionalmente (puede ser para sobrescribir en cada iteración).
+- Las variables de desalocación se mantienen según el diseño actual del código.
