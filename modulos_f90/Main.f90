@@ -85,11 +85,9 @@ program main
    real               p_ratio
    real, allocatable:: p_vals(:), Z(:)
    integer           NTOTALP, NTOTALB
-   real              RXNEW, RYNEW, RZNEW
    real              V, VA, VG, u2
    real              W
    real              DELTV
-   real              DELTW
    real              TEMP
    real              SIGMA
    real              RCUT
@@ -99,6 +97,7 @@ program main
    character(len=3)  CONFIG
    character(len=3)  CONFAT
    character(len=3)  CONFNAT
+   character(len=32) archivo_truncado
    real              auvol
    integer           IPASOS, JPASOS, KPASOS
    integer           MULT
@@ -121,7 +120,6 @@ program main
    integer           K, jin
    real              RXN, RYN, RZN
    real              starttime, endtime, elapsedtime
-   real              aitest76, aitest77
    integer           nmolec2
    integer           natom2
    integer           molkind
@@ -129,6 +127,7 @@ program main
    real              deltva
    integer           ipull
    integer           ICNF, JCNF, KCNF
+   integer           ipos_dot
    integer           NATOMKINDI
    real              CALORESP1, CALORESP2, CALORESP3
    integer           ntotalGRAF
@@ -161,7 +160,7 @@ program main
    if (.not. allocated(p_vals)) allocate(p_vals(isot +1 ))
    p_vals = 0 
    
-   p_ratio = (dp/p)**(1.0d0/ real(isot -1, kind = 8))
+   p_ratio = real((dp/p)**(1.0d0/ real(isot -1, kind = 8)), kind=4)
 
    p_vals(1) = p
    do i = 2, isot
@@ -240,6 +239,12 @@ program main
    open(unit=50, file='SALIDAACTIVADO-100.TXT')
    open(unit=97, file='PERFILES.TXT')
    call estructura(eps, nam, sigma, sigmetano, NC, diel)
+   ipos_dot = index(trim(nam), '.', back=.true.)
+   if (ipos_dot > 0) then
+      archivo_truncado = trim(nam(1:ipos_dot-1)) // '_truncado.txt'
+   else
+      archivo_truncado = trim(nam) // '_truncado.txt'
+   end if
    
    write(*,*)
    write(*,*) '-------------------------------------------------'
@@ -346,9 +351,7 @@ program main
          end do
       end do
       
-      CONFIG = 'CONFIG'
       write(CONFIG, '(I3)') IPASOS
-
       open(unit=40, file='CONFIG'//CONFIG//'.xyz')
       open(unit=41, file='CONFIG'//CONFIG//'.TXT')
       
@@ -376,13 +379,11 @@ program main
       UNA = 0
       AN  = 0
       N2  = 0
+      u2  = 0
       
       ! Sub-bucle JPASOS
       do JPASOS = 1, ijpasos
-         aitest76 = real(JPASOS)/500
-         aitest77 = aitest76 - int(aitest76)
-
-         if (aitest77.eq.0) then
+         if (mod(JPASOS, 500) == 0) then
             write(*,*) JPASOS, N(1:NMOLEC)
          end if
          
@@ -517,7 +518,7 @@ program main
       CALORESP2 = (UN1 - AN1*8.31*T**2)
       CALORESP3 = CALORESP1 / CALORESP2
       
-      open(unit=49, file='truncado.txt')
+      open(unit=49, file=archivo_truncado)
       read(49,*) NC
       ntotalGRAF = NC
       do I = 1, NMOLEC
@@ -555,12 +556,10 @@ program main
       
       ! Estadística espacial CNF
       do I = 1, NMOLEC
-         CONFAT = 'CONFIG'
          write(CONFAT, '(I0)') I
          CONFAT = adjustl(CONFAT)
          
          do NATOMKINDI = 1, NATOM(I)
-            CONFNAT = 'CONFIG'
             write(CONFNAT, '(I0)') NATOMKINDI
             CONFNAT = adjustl(CONFNAT)
             

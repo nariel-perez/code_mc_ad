@@ -7,13 +7,12 @@ CONTAINS
 
     SUBROUTINE estructura(eps, nam, sigma, sigmetano, NC, diel)
         IMPLICIT NONE
-
         ! Variable declarations
         CHARACTER(LEN=16), INTENT(IN) :: nam
         CHARACTER(LEN=32) :: nampro
         REAL, INTENT(IN) :: eps, sigma, sigmetano, diel
         INTEGER, INTENT(INOUT) :: NC
-        INTEGER :: imax, i, io_status
+        INTEGER :: imax, i, io_status, ipos
 
         ! Dynamic arrays
         REAL, ALLOCATABLE :: RXA(:), RYA(:), RZA(:)
@@ -94,9 +93,14 @@ CONTAINS
         CLOSE(51)
         CLOSE(49)
 
-        ! Save truncated structure file
-        nampro = TRIM(nam) // "_truncado"
-        OPEN(51, FILE='truncado.txt', STATUS='REPLACE', IOSTAT=io_status)
+        ! Save truncated structure file (nombre: <base sin extensión>_truncado.txt)
+        ipos = INDEX(TRIM(nam), '.', BACK=.TRUE.)
+        IF (ipos > 0) THEN
+            nampro = TRIM(nam(1:ipos-1)) // "_truncado.txt"
+        ELSE
+            nampro = TRIM(nam) // "_truncado.txt"
+        END IF
+        OPEN(51, FILE=nampro, STATUS='REPLACE', IOSTAT=io_status)
         IF (io_status /= 0) THEN
             PRINT*, "Error: No se pudo abrir el archivo ", TRIM(nampro)
             RETURN

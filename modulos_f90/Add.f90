@@ -56,11 +56,9 @@ SUBROUTINE ADD(MOLKIND)
     ! Variables locales
     INTEGER :: NMAX
     PARAMETER (NMAX = 5000)
-    REAL :: RXNEW, RYNEW, RZNEW
     INTEGER :: IPULL, I
     INTEGER :: INEW, NTRIAL
-    INTEGER :: POSXIN, POSZIN, POSYIN, J, JIN
-    REAL :: RXI, RYI, RZI
+    INTEGER :: POSXIN, POSZIN, POSYIN
 
     ! Calcular posiciones iniciales... esto lo puedo comentar..
     POSXIN = INT(RX1(1) * 10000)

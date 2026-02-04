@@ -35,12 +35,9 @@ SUBROUTINE POTIN(MOLKIND, SIGMA, RCUT, RMIN, DELTV, OVRLAP)
     LOGICAL :: OVRLAP
 
     ! Variables locales
-    INTEGER :: NMAX
-    PARAMETER (NMAX = 5000)
     REAL :: RXI, RYI, RZI, DELTW
-    REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
-    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
-    REAL :: VLRC0, WLRC0
+    REAL :: RCUTSQ, RMINSQ, SIGSQ
+    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ
     INTEGER :: J, JIN
     INTEGER :: I1
     INTEGER :: IPOT, JPOT
@@ -48,9 +45,6 @@ SUBROUTINE POTIN(MOLKIND, SIGMA, RCUT, RMIN, DELTV, OVRLAP)
     REAL :: RIJ
     INTEGER :: IDIST
     REAL :: XMAX, YMAX, ZMAX
-
-    ! Constante PI
-    PARAMETER (PI = 3.14159265)
 
     ! Inicialización de variables
     XMAX = ACELX / ACEL
@@ -106,7 +100,7 @@ SUBROUTINE POTIN(MOLKIND, SIGMA, RCUT, RMIN, DELTV, OVRLAP)
                     END IF
 
                     ! Calcular el potencial de interacción
-                    IDIST = RIJ * 1000 + 1
+                    IDIST = INT(RIJ * 1000.0 + 1.0)
                     VIJ = USS(IDIST, JPOT, IPOT)
 
                     ! Acumular el potencial total

@@ -35,12 +35,8 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
     REAL :: DELTV
 
     ! Variables locales
-    INTEGER :: NMAX
-    PARAMETER (NMAX = 5000)
-    REAL :: RCUT, SIGMA, DELTW
-    REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
-    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
-    REAL :: VLRC0, WLRC0
+    REAL :: RXI, RYI, RZI
+    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, DELTW
     INTEGER :: J, JIN
     INTEGER :: I1
     INTEGER :: IPOT, JPOT
@@ -48,9 +44,6 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
     REAL :: RIJ
     INTEGER :: IDIST
     REAL :: XMAX, YMAX, ZMAX
-
-    ! Constante PI
-    PARAMETER (PI = 3.14159265)
 
     ! Inicialización de variables
     XMAX = ACELX / ACEL
@@ -95,7 +88,7 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
                         RIJ = SQRT(RIJSQ)
 
                         ! Calcular el potencial de interacción
-                        IDIST = RIJ * 1000 + 1
+                        IDIST = INT(RIJ * 1000.0 + 1.0)
                         VIJ = USS(IDIST, JPOT, IPOT)
 
                         ! Acumular el potencial total
@@ -130,7 +123,7 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
                             RIJ = SQRT(RIJSQ)
 
                             ! Calcular el potencial de interacción
-                            IDIST = RIJ * 1000 + 1
+                            IDIST = INT(RIJ * 1000.0 + 1.0)
                             VIJ = USS(IDIST, JPOT, IPOT)
 
                             ! Acumular el potencial total

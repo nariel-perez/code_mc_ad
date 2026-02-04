@@ -40,15 +40,10 @@ SUBROUTINE ADPOTOUT(IPULL, MOLKIND, DELTV)
     REAL :: DELTV
 
     ! Variables locales
-    INTEGER :: NMAX
-    PARAMETER (NMAX = 5000)
-    REAL :: RCUT, SIGMA
+    REAL :: RXI, RYI, RZI
     REAL :: DELTV1, DELTW
-    INTEGER :: NC
-    REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
-    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
-    REAL :: VLRC0, WLRC0
-    INTEGER :: J, JIN, I1, I, K
+    INTEGER :: I1, I, K
+    INTEGER :: J
     INTEGER :: IPOT
 
     ! Inicialización de acumuladores

@@ -1,56 +1,57 @@
 rm -f *.o *.mod
 
+# Flags de compilación
+FFLAGS="-O3 -mcmodel=medium -Wall -Wextra -Wunused -Wconversion"
 
 ######################
 ############ PROCESADO
 #si o si primero
 
-gfortran -O3 -mcmodel=medium -c InputParams.f90
-gfortran -O3 -mcmodel=medium -c AdsorbateInput.f90
-gfortran -O3 -mcmodel=medium -c SimulationData.f90
-gfortran -O3 -mcmodel=medium -c ConstantsModule.f90
-gfortran -O3 -mcmodel=medium -c RotationModule.f90
+gfortran $FFLAGS -c InputParams.f90
+gfortran $FFLAGS -c AdsorbateInput.f90
+gfortran $FFLAGS -c SimulationData.f90
+gfortran $FFLAGS -c ConstantsModule.f90
+gfortran $FFLAGS -c RotationModule.f90
 
 #########
 #Lectura de estrucuturas y calculo de potenciales
-gfortran -O3 -mcmodel=medium -c PotencialFF.f90
-gfortran -O3 -mcmodel=medium -c Potencial.f90
-gfortran -O3 -mcmodel=medium -c Estructura.f90
-gfortran -O3 -mcmodel=medium -c estadistica.f90
+gfortran $FFLAGS -c PotencialFF.f90
+gfortran $FFLAGS -c Potencial.f90
+gfortran $FFLAGS -c Estructura.f90
+gfortran $FFLAGS -c estadistica.f90
 
 #########
 ###bloque In
-gfortran -O3 -mcmodel=medium -c In.f90
-gfortran -O3 -mcmodel=medium -c Adpotin.f90
-gfortran -O3 -mcmodel=medium -c Potin.f90
-gfortran -O3 -mcmodel=medium -c Add.f90
+gfortran $FFLAGS -c In.f90
+gfortran $FFLAGS -c Adpotin.f90
+gfortran $FFLAGS -c Potin.f90
+gfortran $FFLAGS -c Add.f90
 
 #########
 ### bloque out
-gfortran -O3 -mcmodel=medium -c Out.f90
-gfortran -O3 -mcmodel=medium -c Potout.f90
-gfortran -O3 -mcmodel=medium -c Adpotout.f90
-gfortran -O3 -mcmodel=medium -c Remove.f90
+gfortran $FFLAGS -c Out.f90
+gfortran $FFLAGS -c Potout.f90
+gfortran $FFLAGS -c Adpotout.f90
+gfortran $FFLAGS -c Remove.f90
 
 ########
 ##### other (MC)
-gfortran -O3 -mcmodel=medium -c Move.f90
-gfortran -O3 -mcmodel=medium -c change.f90
-gfortran -O3 -mcmodel=medium -c Ranf.f90
+gfortran $FFLAGS -c Move.f90
+gfortran $FFLAGS -c change.f90
+gfortran $FFLAGS -c Ranf.f90
 
 ########
 ###main...
-gfortran -O3 -mcmodel=medium -c Main.f90
+gfortran $FFLAGS -c Main.f90
 
 ######
 ###compilacion 
 # Link all compiled object files into the final executable
-gfortran -O3 -mcmodel=medium -o simulation.exe \
+gfortran $FFLAGS -o simulation.exe \
     InputParams.o AdsorbateInput.o ConstantsModule.o SimulationData.o RotationModule.o \
     Add.o Adpotin.o Adpotout.o change.o estadistica.o \
     Estructura.o In.o Main.o Move.o Out.o Potencial.o PotencialFF.o \
     Potin.o Potout.o Ranf.o Remove.o
 
-# Remove object files after successful compilation
-rm *.o
-
+# Remove object and module files after successful compilation
+rm -f *.o *.mod

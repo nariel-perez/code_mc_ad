@@ -1,6 +1,5 @@
 REAL FUNCTION RANF(DUMMY)
     IMPLICIT NONE
-
     ! Parámetros para el generador de números aleatorios
     INTEGER :: L, C, M
     PARAMETER (L = 1029, C = 221591, M = 1048576)

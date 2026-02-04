@@ -31,17 +31,13 @@ SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICAL
 
     ! Variables locales
     INTEGER :: MOLKIND
-    INTEGER :: NCONFMIN, NCONFMAX
-    INTEGER :: NTOTALB, I
     INTEGER :: NMAX
     PARAMETER (NMAX = 5000)
-    REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+    REAL :: BETA, DELTV, DELTDB, DELTVA
     REAL :: RANF, DUMMY
     INTEGER :: NTRIAL, NLOC, IPULL
-    LOGICAL :: OVRLAP, CREATE
+    LOGICAL :: CREATE
     REAL :: sorteo, b
-    REAL :: Ntotalmolec
-    REAL :: ZTOTAL
 
     ! Inicialización de variables
     CREATE = .FALSE.
