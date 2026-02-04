@@ -132,7 +132,6 @@ program main
    integer           NATOMKINDI
    real              CALORESP1, CALORESP2, CALORESP3
    integer           ntotalGRAF
-   integer           ensemble2
    real, parameter   :: AK_input = 8.31   ! constante de los gases en j/mol·K
    integer           auxmat
 
@@ -151,15 +150,7 @@ program main
    call read_input('input.txt')  
 
    call print_params()
-   
 
-   
-   if (ensemble.eq.3) then
-      call namd1
-      ensemble2 = ensemble
-      ensemble  = 1
-   end if
-   
    auxmat = int(mat/2)
    allocate(uads(-auxmat:auxmat, -auxmat:auxmat, -auxmat:auxmat, 50))
    

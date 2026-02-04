@@ -42,15 +42,6 @@ gfortran -O3 -mcmodel=medium -c Ranf.f90
 ###main...
 gfortran -O3 -mcmodel=medium -c Main.f90
 
-
-#########################
-########
-#sin problemas
-#gfortran -O3 -mcmodel=medium -c namd1.f
-#gfortran -O3 -mcmodel=medium -c namd2.f
-
-
-
 ######
 ###compilacion 
 # Link all compiled object files into the final executable
