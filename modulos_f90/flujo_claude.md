@@ -19,9 +19,10 @@ MOLEC.DAT → AdsorbateInput (estructura de moléculas adsorbato)
 
 ## 2. Construcción de la Superficie (`Estructura.f90`)
 
-- Lee archivo de superficie (nombre en `nam`)
+- Lee archivo de superficie (nombre en `nam`, p. ej. `carbo.txt`)
 - Filtra átomos dentro de la caja de simulación
 - Convierte coordenadas a unidades reducidas
+- Escribe archivo truncado: **`<base>_truncado.txt`** (base = nombre sin extensión; ej. `carbo.txt` → `carbo_truncado.txt`). Main usa este archivo para escribir las configuraciones XYZ.
 
 ---
 
@@ -98,4 +99,6 @@ Cada operación calcula:
 
 ## Notas
 
-El código simula adsorción de múltiples especies moleculares sobre materiales porosos (probablemente carbón activado), calculando isotermas de adsorción y calores isostéricos.
+- El código simula adsorción de múltiples especies moleculares sobre materiales porosos (probablemente carbón activado), calculando isotermas de adsorción y calores isostéricos.
+- **Compilación**: script `run2` (bash run2). Genera `simulation.exe` y elimina al final `.o` y `.mod`.
+- Documentación detallada: `DIAGRAMA_FLUJO.md`, `MEJORAS.md`, `ESTADO_DEL_CODIGO.md`.

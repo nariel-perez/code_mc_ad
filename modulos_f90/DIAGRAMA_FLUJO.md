@@ -65,10 +65,6 @@ START
   │
   ├─► [PREPARACIÓN INICIAL]
   │   │
-  │   ├─► if (ensemble == 3) then
-  │   │   └─► call namd1()                       [¿namd1.f90?]
-  │   │       └─► ensemble = 1
-  │   │
   │   ├─► allocate(uads(...))                   [SimulationData]
   │   │
   │   ├─► [Construcción de presiones logarítmicas]
@@ -122,7 +118,9 @@ START
   │   │
   │   ├─► call estructura(eps, nam, sigma, sigmetano, NC, diel)  [EstructuraModule]
   │   │   └─► Lee archivo de superficie 'nam'
-  │   │       Calcula estructura cristalina
+  │   │       Escribe <base_sin_ext>_truncado.txt (átomos en caja)
+  │   │
+  │   ├─► archivo_truncado = trim(nam sin extensión) // '_truncado.txt'   [Main]
   │   │
   │   ├─► call potencialff(...)                  [PotencialFF.f90]
   │   │   └─► Construye tablas de potencial fuerza-fuerza
@@ -185,13 +183,9 @@ START
   │       │       │   │
   │       │       │   └─► do KPASOS = 1, ikpasos*MULT
   │       │       │       │
-  │       │       │       ├─► IJ = ranf(DUMMY)*3 + 1        [Ranf.f90]
-  │       │       │       │
-  │       │       │       ├─► if (ensemble == 0) goto 30    [Solo MOVE]
-  │       │       │       │
-  │       │       │       └─► goto (10, 20, 30, 35) IJ
-  │       │       │           │
-  │       │       │           ├─► [10] call in(...)         [In.f90]
+  │       │       │       ├─► if (ensemble == 0) then call move(...) [solo MOVE]
+  │       │       │       │   else; IJ = int(ranf(DUMMY)*4) + 1; select case (IJ)
+  │       │       │       ├─► case (1)  call in(...)         [In.f90]
   │       │       │           │   │
   │       │       │           │   ├─► Elige tipo de molécula (MOLKIND)
   │       │       │           │   ├─► Genera posición aleatoria (RXNEW, RYNEW, RZNEW)
@@ -207,8 +201,7 @@ START
   │       │       │           │   └─► if (aceptado) then
   │       │       │           │       └─► call add(molkind)  [Add.f90]
   │       │       │           │           └─► Actualiza LOCATE, RX/RY/RZ, N
-  │       │       │           │
-  │       │       │           ├─► [20] call out(...)        [Out.f90]
+  │       │       ├─► case (2)  call out(...)        [Out.f90]
   │       │       │           │   │
   │       │       │           │   ├─► Elige tipo de molécula (MOLKIND)
   │       │       │           │   ├─► Elige molécula aleatoria: NLOC → IPULL
@@ -220,8 +213,7 @@ START
   │       │       │           │   └─► if (aceptado) then
   │       │       │           │       └─► call remove(NLOC, IPULL, MOLKIND)  [Remove.f90]
   │       │       │           │           └─► Actualiza LOCATE, N
-  │       │       │           │
-  │       │       │           ├─► [30] call move(...)        [Move.f90]
+  │       │       ├─► case (3)  call move(...)        [Move.f90]
   │       │       │           │   │
   │       │       │           │   ├─► Elige molécula aleatoria: NLOC → IPULL
   │       │       │           │   ├─► Guarda posición antigua
@@ -233,9 +225,9 @@ START
   │       │       │           │   ├─► Criterio de aceptación Metropolis
   │       │       │           │   └─► if (aceptado) then
   │       │       │           │       └─► Actualiza RX/RY/RZ
-  │       │       │           │
-  │       │       │           └─► [35] call change(...)     [change.f90]
-  │       │       │               └─► Cambio de orientación/conformación
+  │       │       ├─► case (4)  call change(...)     [change.f90]
+  │       │       │               └─► Cambio de tipo/orientación de molécula
+  │       │       └─► end select
   │       │       │
   │       │       ├─► [Después del bucle KPASOS]
   │       │       │   │
@@ -327,7 +319,7 @@ EstructuraModule.f90
 In.f90 (CREACIÓN)
   ├─► use InputParams          → acel, acelx, acely, acelz, bcx, bcy, bcz
   ├─► use AdsorbateInput       → RX0, RY0, RZ0, NMOLEC, NATOM
-  ├─► use SimulationData      → RX1, RY1, RZ1, EXNEW, EYNEW, EZNEW, ANX, ANGY, ANZ, N
+  ├─► use SimulationData      → RX1, RY1, RZ1, EXNEW, EYNEW, EZNEW, N
   ├─► use RotationModule       → GetRotationMatrix()
   ├─► call GetRotationMatrix() → Calcula matriz de rotación
   ├─► call potin()            → [Potin.f90] Energía adsorbato-adsorbato
@@ -375,12 +367,16 @@ ENTRADA:
   ├─► [archivo de superficie]  → [estructura()]
   │   └─► nombre dado por variable 'nam'
   │
+  ├─► <base>_truncado.txt     → [Main - lectura en cada isoterma]
+  │   └─► Generado por estructura(); base = nam sin extensión (ej. carbo.txt → carbo_truncado.txt)
+  │
   └─► initconf.txt            → [Main - solo si ensemble < 2]
       └─► V, VG, VA
           └─► nmolec2
               └─► Para cada tipo: natom2, ncantmol, coordenadas
 
 SALIDA:
+  ├─► <base>_truncado.txt     → [EstructuraModule] Superficie truncada (átomos en caja)
   ├─► SALIDAACTIVADO-100.TXT   → [Main] Resultados principales de isoterma
   ├─► PERFILES.TXT            → [Main] Perfiles de densidad
   ├─► CONFIG###.xyz           → [Main] Configuraciones en formato XYZ

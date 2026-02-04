@@ -31,7 +31,7 @@ Documento unificado de mejoras aplicadas al programa principal. Sirve como refer
 Se eliminaron las declaraciones locales no usadas en Main:  
 `NMAX`, `RMIN`, `OVRLAP`, `MOLEC1`, `NMATOM`, `IKIND`, `NS`, `NCONFMIN`, `NCONFMAX`.
 
-**Nota**: `RXNEW`, `RYNEW`, `RZNEW` se mantienen (se usan en la interfaz con subrutinas).
+**Nota**: En una revisión posterior se eliminaron también `RXNEW`, `RYNEW`, `RZNEW` y `DELTW` de Main (no se usan en el cuerpo del programa).
 
 ---
 
@@ -77,4 +77,26 @@ Se eliminaron las declaraciones locales no usadas en Main:
 
 ---
 
-*Última unificación de documentación de mejoras: febrero 2025. Para flujo del programa y módulos, ver `DIAGRAMA_FLUJO.md` y `flujo_claude.md`.*
+## 7. Trabajo posterior (revisión 2025)
+
+### Bugs y conversiones (corregidos)
+- **In.f90**: Inicialización de `DELTW = 0.0` para evitar uso no inicializado en `W = W + DELTW`.
+- **Main.f90**: Inicialización de `u2 = 0` en el bloque de acumuladores por isoterma; eliminación de comparación con real (`aitest77.eq.0` → `mod(JPASOS, 500) == 0`); conversión explícita de `p_ratio`; eliminación de truncado de caracteres (CONFIG/CONFAT/CONFNAT); eliminación de variables `aitest76`, `aitest77`.
+- **Potin.f90, Potout.f90**: Conversión explícita REAL→INTEGER para índice de tabla: `IDIST = INT(RIJ*1000.0 + 1.0)`.
+
+### Archivo truncado (estructura + Main)
+- **Estructura.f90**: El archivo de superficie truncada se escribe con nombre `<base>_truncado.txt`, donde base es `nam` sin extensión (ej. `carbo.txt` → `carbo_truncado.txt`). Se evita doble extensión.
+- **Main.f90**: Variable `archivo_truncado` y misma regla de nombre; apertura con `open(unit=49, file=archivo_truncado)`.
+
+### Código obsoleto eliminado
+- Eliminado bloque `if (ensemble.eq.3) then call namd1 ... end if` y variable `ensemble2` en Main; eliminadas referencias a `namd1`/`namd2` en el script de compilación.
+
+### Limpieza de warnings
+- Eliminadas variables y parámetros no usados en varios módulos (PotencialFF, Potencial, In, Adpotin, Potin, Add, Out, Potout, Adpotout, Remove, Move, change). Se mantuvieron las variables necesarias para el cuerpo del código. Las directivas `!GCC$ ATTRIBUTES UNUSED` no son reconocidas por el compilador actual, por lo que persisten avisos de argumentos dummy no usados.
+
+### Script de compilación (run2)
+- Al final de la compilación se ejecuta `rm -f *.o *.mod` para dejar solo fuentes y ejecutable (o solo fuentes si se borra el .exe).
+
+---
+
+*Última actualización: febrero 2025. Para flujo del programa y módulos, ver `DIAGRAMA_FLUJO.md` y `flujo_claude.md`. Para estado actual detallado, ver `ESTADO_DEL_CODIGO.md`.*
