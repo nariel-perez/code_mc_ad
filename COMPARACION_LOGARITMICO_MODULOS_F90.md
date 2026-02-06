@@ -74,4 +74,60 @@ Los códigos de **logaritmico** y **modulos_f90** implementan, en esencia, la **
 
 ---
 
+## 7. Diferencias numéricas en la salida (SALIDAACTIVADO-100.TXT)
+
+Al correr el **mismo sistema** (p. ej. adsorción de butano en grafito) con ambos códigos, las filas de salida pueden diferir. Esta sección explica a qué se debe y por qué las “energías” (columnas 3–5) pueden cambiar mucho aunque la diferencia en número de moléculas (columna 2) sea pequeña.
+
+### 7.1 Formato de la salida
+
+Cada fila de `SALIDAACTIVADO-100.TXT` corresponde a un punto de la isoterma y tiene la forma:
+
+`P` | `ANPROM(1)` | `CALOR` | `CALORA` | `CALORESP3`
+
+- **Columna 1**: presión (P).
+- **Columna 2**: número promedio de moléculas adsorbidas, ANPROM(1).
+- **Columnas 3–5**: magnitudes derivadas de promedios y fluctuaciones de energía y N:
+  - **CALOR**: calor isostérico (total).
+  - **CALORA**: contribución adsorbato–superficie al calor isostérico.
+  - **CALORESP3**: cantidad relacionada con fluctuaciones (CALORESP1/CALORESP2).
+
+### 7.2 Por qué puede diferir el número de moléculas (columna 2)
+
+- **Rotación**  
+  - **logaritmico**: usa ángulos (DX, DY, DZ) y calcula la matriz de rotación con **COS/SIN directos** (continuos).  
+  - **modulos_f90**: usa **tabla precalculada** de 1000 valores de seno/coseno en `[−π, π]`; el ángulo se discretiza al más cercano (`INDICE = INT((DX+PI)/PASO)+1`).  
+  Eso introduce un pequeño error en la matriz de rotación → posiciones de prueba ligeramente distintas → aceptaciones/rechazos distintos → trayectoria MC distinta y, en consecuencia, un **N promedio** que puede diferir en unas pocas moléculas (p. ej. ~3 al final de la isoterma).
+
+- **Elección del movimiento**  
+  En logaritmico el movimiento se elige con `*3+1` (solo 1, 2 o 3), por lo que “change” casi no se usa; en modulos_f90 se usa `*4+1` (in, out, move, change equiprobables). Eso también hace que las trayectorias no sean las mismas.
+
+Ambos efectos son de **implementación** (rotación tabulada vs continua, y mezcla de movimientos), no de la física del modelo. Que ANPROM coincida bastante (sobre todo a presiones bajas) y solo se separe un poco a alta presión es coherente con eso.
+
+### 7.3 Por qué CALOR, CALORA y CALORESP3 pueden cambiar mucho
+
+Esas tres columnas **no son** la energía total en sí, sino cantidades derivadas de **promedios y fluctuaciones** a lo largo del run:
+
+- **CALOR** = 8.3144*T − ((UN1 − U1*AN1) / **ANN**)*8.31  
+- **CALORA** = −((UNA1 − UA1*AN1) / **ANN**)*8.31  
+- **CALORESP1** = (u2 − U1²)*8.31² − (8.31*U1*AN1)² / **ANN**  
+- **CALORESP2** = UN1 − AN1*8.31*T²  
+- **CALORESP3** = CALORESP1 / CALORESP2  
+
+Donde **ANN = AN2 − AN1²** es la **varianza del número de partículas** (fluctuación de N). Aparece en el **denominador** de CALOR y CALORA. Por tanto:
+
+1. **Trayectorias distintas**  
+   Aunque se use la misma semilla de números aleatorios en ambos códigos, la rotación tabulada y la distinta mezcla de movimientos hacen que, desde el primer paso MC, las configuraciones aceptadas sean distintas. Es decir, son **dos realizaciones distintas** del mismo proceso estocástico. Entonces U, UA, UG, UN, UNA, etc., y sobre todo sus **fluctuaciones** (u2, AN2, covarianzas), no tienen por qué ser similares entre sí.
+
+2. **Sensibilidad a las fluctuaciones**  
+   CALOR y CALORA dependen de cocientes donde entra **ANN** (varianza de N). Si ANN es pequeña, pequeños cambios en UN1, U1, AN1, UNA1, UA1 (por tener otra trayectoria) producen **grandes cambios** en (UN1−U1*AN1)/ANN y (UNA1−UA1*AN1)/ANN. Lo mismo para CALORESP1 (que también divide por ANN) y para CALORESP3. Por eso es normal que, **incluso con una diferencia pequeña en ANPROM** (p. ej. 3 moléculas), las columnas 3–5 difieran bastante: no solo cambia un poco el promedio de N, sino toda la estadística de fluctuaciones (U, N, productos U×N, etc.).
+
+3. **Resumen**  
+   Las “energías” que ves en las columnas 3–5 son **calores isostéricos y cantidades relacionadas con fluctuaciones**. Dependen mucho de la trayectoria MC concreta y de varianzas/covarianzas. Que cambien mucho entre logaritmico y modulos_f90, aunque ANPROM sea parecido, es **esperable** por:  
+   - trayectorias diferentes (rotación + mezcla de movimientos),  
+   - fórmulas con ANN en el denominador (muy sensibles a pequeñas diferencias en promedios y fluctuaciones).
+
+Si se quisiera acercar más los resultados entre ambos códigos, habría que: (i) usar la misma rotación (seno/coseno continuos también en modulos_f90, sin tabla), y (ii) igualar la elección de movimientos (*3+1 y mismo orden de casos que en logaritmico, o aceptar que siempre habrá diferencias por ser dos realizaciones estocásticas distintas).
+
+---
+
 *Documento generado a partir de la revisión comparativa de los directorios `logaritmico/` y `modulos_f90/` del proyecto code_mc_ad.*
