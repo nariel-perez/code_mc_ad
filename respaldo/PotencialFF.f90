@@ -9,9 +9,8 @@ SUBROUTINE POTENCIALFF(EPS, sigma, sigmetano, NC, RCUT, diel)
     USE PhysicalConstants, only: FCLEC, FACTORELEC
     USE SimulationData
     IMPLICIT NONE
-
     ! Declaración de variables
-    INTEGER :: MOLKIND, NKIND, INKIND, KINDI, IPOT, JPOT, I, NC
+    INTEGER :: NC, NKIND, INKIND, KINDI, IPOT, JPOT, I
     REAL :: PI, RCELE, SIGMA1, FACTOR, RCUTSQ, SIGSQ, SIGCUB, RMIN, RMINSQ
     REAL :: SR3, SR9, SR2, SR6, VLRC0, WLRC0, DELTV, DELTW, RZI, RIJSQ, VIJ, WIJ, VIJE1
     REAL :: EPS, sigma, sigmetano, RCUT, diel, REDELEC

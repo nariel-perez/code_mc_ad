@@ -84,25 +84,20 @@ program main
    
    real               p_ratio
    real, allocatable:: p_vals(:), Z(:)
-   integer           NMAX
    integer           NTOTALP, NTOTALB
-   real              RXNEW, RYNEW, RZNEW
    real              V, VA, VG, u2
    real              W
    real              DELTV
-   real              DELTW
    real              TEMP
    real              SIGMA
    real              RCUT
-   real              RMIN
    real              ANPROM(10)
-   logical           OVRLAP
    logical           CREATE
    logical           GHOST
-   character(len=16) MOLEC1
    character(len=3)  CONFIG
    character(len=3)  CONFAT
    character(len=3)  CONFNAT
+   character(len=32) archivo_truncado
    real              auvol
    integer           IPASOS, JPASOS, KPASOS
    integer           MULT
@@ -110,9 +105,7 @@ program main
    real              VOL, XMAX, YMAX, ZMAX
    integer           NC
    integer           I, J
-   integer           NMATOM
    real              X1, Y1, Z1
-   integer           IKIND, NS
    integer           INMOLEC
    real              CR
    integer           IJ
@@ -122,13 +115,11 @@ program main
    real              N2
    real              AN1, U1, UNG1, UG1, UNA1, UA1, UN1, AN2
    real              CALOR, CALORG, CALORA
-   real              ESCALA
    real              RXAI, RYAI, RZAI, EPSAI, SGCI, QACI
    integer           SYMBOL2
    integer           K, jin
    real              RXN, RYN, RZN
    real              starttime, endtime, elapsedtime
-   real              aitest76, aitest77
    integer           nmolec2
    integer           natom2
    integer           molkind
@@ -136,18 +127,14 @@ program main
    real              deltva
    integer           ipull
    integer           ICNF, JCNF, KCNF
+   integer           ipos_dot
    integer           NATOMKINDI
    real              CALORESP1, CALORESP2, CALORESP3
-   integer           NCONFMIN, NCONFMAX
    integer           ntotalGRAF
-   real              escalax, escalay, escalaz
-   integer           ensemble2
    real, parameter   :: AK_input = 8.31   ! constante de los gases en j/mol·K
    integer           auxmat
 
-
-
-
+   
    
    ! ================================================================
    ! =================== Inicio del programa =========================
@@ -162,15 +149,7 @@ program main
    call read_input('input.txt')  
 
    call print_params()
-   
 
-   
-   if (ensemble.eq.3) then
-      call namd1
-      ensemble2 = ensemble
-      ensemble  = 1
-   end if
-   
    auxmat = int(mat/2)
    allocate(uads(-auxmat:auxmat, -auxmat:auxmat, -auxmat:auxmat, 50))
    
@@ -181,10 +160,10 @@ program main
    if (.not. allocated(p_vals)) allocate(p_vals(isot +1 ))
    p_vals = 0 
    
-   p_ratio = (dp/p)**(1.0d0/ real(isot -1, kind = 8))
+   p_ratio = real((dp/p)**(1.0d0/ real(isot -1, kind = 8)), kind=4)
 
    p_vals(1) = p
-   do  i = 2, isot
+   do i = 2, isot
       p_vals(i) = p_vals(i-1)*p_ratio
    end do
    
@@ -194,7 +173,6 @@ program main
    ! ----------------------------------------------------------------
    SIGMA = sigmetano / acel
    TEMP  = T / eps
-   P     = P ! * 1333.22
    PRED  = P * SIGMA**3 / eps
    RCUT  = 10*SIGMA
    
@@ -261,6 +239,12 @@ program main
    open(unit=50, file='SALIDAACTIVADO-100.TXT')
    open(unit=97, file='PERFILES.TXT')
    call estructura(eps, nam, sigma, sigmetano, NC, diel)
+   ipos_dot = index(trim(nam), '.', back=.true.)
+   if (ipos_dot > 0) then
+      archivo_truncado = trim(nam(1:ipos_dot-1)) // '_truncado.txt'
+   else
+      archivo_truncado = trim(nam) // '_truncado.txt'
+   end if
    
    write(*,*)
    write(*,*) '-------------------------------------------------'
@@ -343,8 +327,10 @@ program main
       end do
       
       write(*,*) VA, VG, V, ' Energias Iniciales'
-      anprom(I) = 0
-      ntotal(i) = 0
+      do I = 1, NMOLEC
+         anprom(I) = 0
+         ntotal(I) = 0
+      end do
    end if
 
    ! -------------------------------------------------------------
@@ -365,9 +351,7 @@ program main
          end do
       end do
       
-      CONFIG = 'CONFIG'
       write(CONFIG, '(I3)') IPASOS
-
       open(unit=40, file='CONFIG'//CONFIG//'.xyz')
       open(unit=41, file='CONFIG'//CONFIG//'.TXT')
       
@@ -395,15 +379,11 @@ program main
       UNA = 0
       AN  = 0
       N2  = 0
+      u2  = 0
       
       ! Sub-bucle JPASOS
       do JPASOS = 1, ijpasos
-         aitest76 = real(JPASOS)/500
-         write(58,*) aitest76
-         aitest77 = aitest76 - int(aitest76)
-         MULT     = 1
-
-         if (aitest77.eq.0) then
+         if (mod(JPASOS, 500) == 0) then
             write(*,*) JPASOS, N(1:NMOLEC)
          end if
          
@@ -420,25 +400,25 @@ program main
          end if
          
          do KPASOS = 1, ikpasos*MULT
-            ! Elección del paso con goto
-            IJ = ranf(DUMMY)*3 + 1
-            if (ensemble.eq.0) goto 30
-            goto (10,20,30,35) IJ
-            
-10          call in(temp, z, sigma, eps, rcut, v, va, vg, w, create, cr, jpasos, &
-                 canonicalmolecules)
-            goto 40
-            
-20          call out(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos, &
-                 nmin, nmaxi, canonicalmolecules)
-            goto 40
-            
-30          call move(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
-            goto 40
-            
-35          call change(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
-            
-40       end do
+            ! Elección del paso
+            if (ensemble == 0) then
+               call move(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
+            else
+               IJ = int(ranf(DUMMY)*4) + 1
+               select case (IJ)
+               case (1)
+                  call in(temp, z, sigma, eps, rcut, v, va, vg, w, create, cr, jpasos, &
+                       canonicalmolecules)
+               case (2)
+                  call out(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos, &
+                       canonicalmolecules)
+               case (3)
+                  call move(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
+               case (4)
+                  call change(temp, z, sigma, eps, rcut, v, va, vg, w, ghost, jpasos)
+               end select
+            end if
+         end do
 
          ! Reescalado de energías
          V  = V * eps
@@ -530,8 +510,6 @@ program main
       ANN = AN2 - AN1**2
       write(*,*) ANN, ' ANN'
 
-      ESCALA = acel
-      
       CALOR  = 8.3144*T - ((UN1 - U1*AN1)/ (ANN))*8.31
       CALORG = (UNG1 - UG1*AN1)/ (ANN)*8.31
       CALORA = -((UNA1 - UA1*AN1)/ (ANN))*8.31
@@ -540,7 +518,7 @@ program main
       CALORESP2 = (UN1 - AN1*8.31*T**2)
       CALORESP3 = CALORESP1 / CALORESP2
       
-      open(unit=49, file='truncado.txt')
+      open(unit=49, file=archivo_truncado)
       read(49,*) NC
       ntotalGRAF = NC
       do I = 1, NMOLEC
@@ -552,15 +530,11 @@ program main
       write(*,*) ntotalGRAF
       write(*,*) ' '
       
-      escalax = acelx
-      escalay = acely
-      escalaz = acelz
-      write(*,*) escalax, escalay, escalaz
+      write(*,*) acelx, acely, acelz
       
       do I = 1, NC
          read(49,*) RXAI, RYAI, RZAI, EPSAI, SGCI, QACI, SYMBOL2
          write(40,*) SYMBOL2, RXAI, RYAI, RZAI
-         ntotalGRAF = NC
       end do
       close(49)
 
@@ -568,9 +542,9 @@ program main
          do j = 1, N(I)
             jin = locate(j,I)
             do k = 1, NATOM(I)
-               RXN = RX(jin,k,I)*ESCALA
-               RYN = RY(jin,k,I)*ESCALA
-               RZN = RZ(jin,k,I)*ESCALA
+               RXN = RX(jin,k,I)*acel
+               RYN = RY(jin,k,I)*acel
+               RZN = RZ(jin,k,I)*acel
                write(40,*) NSYM(k,I), RXN, RYN, RZN
             end do
          end do
@@ -580,18 +554,12 @@ program main
          write(*,*) i, N(i), NATOM(i), ' i natom main'
       end do
       
-      if (ensemble2.eq.3) then
-         ! (colocar aquí lógica adicional si aplica)
-      end if
-      
       ! Estadística espacial CNF
       do I = 1, NMOLEC
-         CONFAT = 'CONFIG'
          write(CONFAT, '(I0)') I
          CONFAT = adjustl(CONFAT)
          
          do NATOMKINDI = 1, NATOM(I)
-            CONFNAT = 'CONFIG'
             write(CONFNAT, '(I0)') NATOMKINDI
             CONFNAT = adjustl(CONFNAT)
             
@@ -620,8 +588,6 @@ program main
       write(*,*) P, ANPROM(1:NMOLEC), CALOR, 8.31*T - CALORG, CALORA
       close(40)
       close(41)
-      close(21)
-      close(22)
       
       AN  = 0
       AN1 = 0

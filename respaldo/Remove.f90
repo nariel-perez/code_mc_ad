@@ -7,8 +7,6 @@ SUBROUTINE REMOVE(NLOC, IPULL, MOLKIND)
     INTEGER :: NLOC, IPULL, MOLKIND
 
     ! Variables locales
-    INTEGER :: NMAX
-    PARAMETER (NMAX = 5000)
     INTEGER :: K
 
     ! Verificar si el índice NLOC es menor que el número de moléculas de tipo MOLKIND

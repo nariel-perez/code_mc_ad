@@ -1,0 +1,1015 @@
+PotencialFF.f90:8:60:
+
+    8 | SUBROUTINE POTENCIALFF(EPS, sigma, sigmetano, NC, RCUT, diel)
+      |                                                            1
+Warning: Unused dummy argument ‘diel’ at (1) [-Wunused-dummy-argument]
+PotencialFF.f90:14:22:
+
+   14 |     INTEGER :: MOLKIND, NKIND, INKIND, KINDI, IPOT, JPOT, I, NC
+      |                      1
+Warning: Unused variable ‘molkind’ declared at (1) [-Wunused-variable]
+PotencialFF.f90:8:48:
+
+    8 | SUBROUTINE POTENCIALFF(EPS, sigma, sigmetano, NC, RCUT, diel)
+      |                                                1
+Warning: Unused dummy argument ‘nc’ at (1) [-Wunused-dummy-argument]
+Potencial.f90:7:58:
+
+    7 | SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
+      |                                                          1
+Warning: Unused dummy argument ‘diel’ at (1) [-Wunused-dummy-argument]
+Potencial.f90:14:20:
+
+   14 |   INTEGER :: MOLKIND, NC, NKIND, INKIND, KINDI, IPOT, I, IJ, K, J
+      |                    1
+Warning: Unused variable ‘molkind’ declared at (1) [-Wunused-variable]
+Potencial.f90:19:41:
+
+   19 |   REAL :: diel, xmax, ymax, zmax, REDELEC, RCUT
+      |                                         1
+Warning: Unused variable ‘redelec’ declared at (1) [-Wunused-variable]
+Potencial.f90:17:49:
+
+   17 |   REAL :: RMIN, RMINSQ, SR3, SR9, SR2, SR6, VLRC0, WLRC0, DELTW
+      |                                                 1
+Warning: Unused variable ‘vlrc0’ declared at (1) [-Wunused-variable]
+Potencial.f90:17:56:
+
+   17 |   REAL :: RMIN, RMINSQ, SR3, SR9, SR2, SR6, VLRC0, WLRC0, DELTW
+      |                                                        1
+Warning: Unused variable ‘wlrc0’ declared at (1) [-Wunused-variable]
+Estructura.f90:8:62:
+
+    8 |     SUBROUTINE estructura(eps, nam, sigma, sigmetano, NC, diel)
+      |                                                              1
+Warning: Unused dummy argument ‘diel’ at (1) [-Wunused-dummy-argument]
+Estructura.f90:8:29:
+
+    8 |     SUBROUTINE estructura(eps, nam, sigma, sigmetano, NC, diel)
+      |                             1
+Warning: Unused dummy argument ‘eps’ at (1) [-Wunused-dummy-argument]
+In.f90:51:13:
+
+   51 |   REAL :: A11, A12, A13
+      |             1
+Warning: Unused variable ‘a11’ declared at (1) [-Wunused-variable]
+In.f90:51:18:
+
+   51 |   REAL :: A11, A12, A13
+      |                  1
+Warning: Unused variable ‘a12’ declared at (1) [-Wunused-variable]
+In.f90:51:23:
+
+   51 |   REAL :: A11, A12, A13
+      |                       1
+Warning: Unused variable ‘a13’ declared at (1) [-Wunused-variable]
+In.f90:52:13:
+
+   52 |   REAL :: A21, A22, A23
+      |             1
+Warning: Unused variable ‘a21’ declared at (1) [-Wunused-variable]
+In.f90:52:18:
+
+   52 |   REAL :: A21, A22, A23
+      |                  1
+Warning: Unused variable ‘a22’ declared at (1) [-Wunused-variable]
+In.f90:52:23:
+
+   52 |   REAL :: A21, A22, A23
+      |                       1
+Warning: Unused variable ‘a23’ declared at (1) [-Wunused-variable]
+In.f90:53:13:
+
+   53 |   REAL :: A31, A32, A33
+      |             1
+Warning: Unused variable ‘a31’ declared at (1) [-Wunused-variable]
+In.f90:53:18:
+
+   53 |   REAL :: A31, A32, A33
+      |                  1
+Warning: Unused variable ‘a32’ declared at (1) [-Wunused-variable]
+In.f90:53:23:
+
+   53 |   REAL :: A31, A32, A33
+      |                       1
+Warning: Unused variable ‘a33’ declared at (1) [-Wunused-variable]
+In.f90:21:6:
+
+   21 |   USE SimulationData, ONLY: RX1, RY1, RZ1, EXNEW, EYNEW, EZNEW, ANX, ANGY, ANZ, &
+      |      1
+Warning: Unused module variable ‘angy’ which has been explicitly imported at (1) [-Wunused-variable]
+In.f90:21:6:
+
+   21 |   USE SimulationData, ONLY: RX1, RY1, RZ1, EXNEW, EYNEW, EZNEW, ANX, ANGY, ANZ, &
+      |      1
+Warning: Unused module variable ‘anx’ which has been explicitly imported at (1) [-Wunused-variable]
+In.f90:21:6:
+
+   21 |   USE SimulationData, ONLY: RX1, RY1, RZ1, EXNEW, EYNEW, EZNEW, ANX, ANGY, ANZ, &
+      |      1
+Warning: Unused module variable ‘anz’ which has been explicitly imported at (1) [-Wunused-variable]
+In.f90:17:93:
+
+   17 | SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANONICALMOLECULES)
+      |                                                                                             1
+Warning: Unused dummy argument ‘canonicalmolecules’ at (1) [-Wunused-dummy-argument]
+In.f90:50:13:
+
+   50 |   REAL :: COS, SIN
+      |             1
+Warning: Unused variable ‘cos’ declared at (1) [-Wunused-variable]
+In.f90:17:33:
+
+   17 | SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANONICALMOLECULES)
+      |                                 1
+Warning: Unused dummy argument ‘eps’ at (1) [-Wunused-dummy-argument]
+In.f90:17:73:
+
+   17 | SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANONICALMOLECULES)
+      |                                                                         1
+Warning: Unused dummy argument ‘jpasos’ at (1) [-Wunused-dummy-argument]
+In.f90:40:15:
+
+   40 |   INTEGER :: NC
+      |               1
+Warning: Unused variable ‘nc’ declared at (1) [-Wunused-variable]
+In.f90:35:31:
+
+   35 |   INTEGER :: NCONFMIN, NCONFMAX
+      |                               1
+Warning: Unused variable ‘nconfmax’ declared at (1) [-Wunused-variable]
+In.f90:35:21:
+
+   35 |   INTEGER :: NCONFMIN, NCONFMAX
+      |                     1
+Warning: Unused variable ‘nconfmin’ declared at (1) [-Wunused-variable]
+In.f90:55:20:
+
+   55 |   INTEGER :: NTOTALB
+      |                    1
+Warning: Unused variable ‘ntotalb’ declared at (1) [-Wunused-variable]
+In.f90:57:12:
+
+   57 |   REAL :: P1, P2, P3
+      |            1
+Warning: Unused variable ‘p1’ declared at (1) [-Wunused-variable]
+In.f90:57:16:
+
+   57 |   REAL :: P1, P2, P3
+      |                1
+Warning: Unused variable ‘p2’ declared at (1) [-Wunused-variable]
+In.f90:57:20:
+
+   57 |   REAL :: P1, P2, P3
+      |                    1
+Warning: Unused variable ‘p3’ declared at (1) [-Wunused-variable]
+In.f90:58:19:
+
+   58 |   INTEGER :: POSXIN, POSYIN, POSZIN
+      |                   1
+Warning: Unused variable ‘posxin’ declared at (1) [-Wunused-variable]
+In.f90:58:27:
+
+   58 |   INTEGER :: POSXIN, POSYIN, POSZIN
+      |                           1
+Warning: Unused variable ‘posyin’ declared at (1) [-Wunused-variable]
+In.f90:58:35:
+
+   58 |   INTEGER :: POSXIN, POSYIN, POSZIN
+      |                                   1
+Warning: Unused variable ‘poszin’ declared at (1) [-Wunused-variable]
+In.f90:50:18:
+
+   50 |   REAL :: COS, SIN
+      |                  1
+Warning: Unused variable ‘sin’ declared at (1) [-Wunused-variable]
+In.f90:56:16:
+
+   56 |   REAL :: ZTOTAL
+      |                1
+Warning: Unused variable ‘ztotal’ declared at (1) [-Wunused-variable]
+Adpotin.f90:51:21:
+
+   51 |     INTEGER :: J, JIN
+      |                     1
+Warning: Unused variable ‘jin’ declared at (1) [-Wunused-variable]
+Adpotin.f90:46:17:
+
+   46 |     INTEGER :: NC, NTRIAL
+      |                 1
+Warning: Unused variable ‘nc’ declared at (1) [-Wunused-variable]
+Adpotin.f90:42:19:
+
+   42 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Adpotin.f90:46:25:
+
+   46 |     INTEGER :: NC, NTRIAL
+      |                         1
+Warning: Unused variable ‘ntrial’ declared at (1) [-Wunused-variable]
+Adpotin.f90:47:21:
+
+   47 |     LOGICAL :: OVRLAP
+      |                     1
+Warning: Unused variable ‘ovrlap’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:57:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                         1
+Warning: Unused variable ‘pi’ declared at (1) [-Wunused-variable]
+Adpotin.f90:44:16:
+
+   44 |     REAL :: RCUT, RMIN, SIGMA, RXI, RYI, RZI
+      |                1
+Warning: Unused variable ‘rcut’ declared at (1) [-Wunused-variable]
+Adpotin.f90:48:18:
+
+   48 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                  1
+Warning: Unused variable ‘rcutsq’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:35:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                   1
+Warning: Unused variable ‘rijsq’ declared at (1) [-Wunused-variable]
+Adpotin.f90:44:22:
+
+   44 |     REAL :: RCUT, RMIN, SIGMA, RXI, RYI, RZI
+      |                      1
+Warning: Unused variable ‘rmin’ declared at (1) [-Wunused-variable]
+Adpotin.f90:48:26:
+
+   48 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                          1
+Warning: Unused variable ‘rminsq’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:16:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                1
+Warning: Unused variable ‘rxij’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:22:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                      1
+Warning: Unused variable ‘ryij’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:28:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                            1
+Warning: Unused variable ‘rzij’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:53:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                     1
+Warning: Unused variable ‘sigcub’ declared at (1) [-Wunused-variable]
+Adpotin.f90:44:29:
+
+   44 |     REAL :: RCUT, RMIN, SIGMA, RXI, RYI, RZI
+      |                             1
+Warning: Unused variable ‘sigma’ declared at (1) [-Wunused-variable]
+Adpotin.f90:48:33:
+
+   48 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                 1
+Warning: Unused variable ‘sigsq’ declared at (1) [-Wunused-variable]
+Adpotin.f90:48:38:
+
+   48 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                      1
+Warning: Unused variable ‘sr2’ declared at (1) [-Wunused-variable]
+Adpotin.f90:48:48:
+
+   48 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                                1
+Warning: Unused variable ‘sr3’ declared at (1) [-Wunused-variable]
+Adpotin.f90:48:43:
+
+   48 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                           1
+Warning: Unused variable ‘sr6’ declared at (1) [-Wunused-variable]
+Adpotin.f90:48:53:
+
+   48 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                                     1
+Warning: Unused variable ‘sr9’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:40:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                        1
+Warning: Unused variable ‘vij’ declared at (1) [-Wunused-variable]
+Adpotin.f90:50:17:
+
+   50 |     REAL :: VLRC0, WLRC0
+      |                 1
+Warning: Unused variable ‘vlrc0’ declared at (1) [-Wunused-variable]
+Adpotin.f90:49:45:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                             1
+Warning: Unused variable ‘wij’ declared at (1) [-Wunused-variable]
+Adpotin.f90:50:24:
+
+   50 |     REAL :: VLRC0, WLRC0
+      |                        1
+Warning: Unused variable ‘wlrc0’ declared at (1) [-Wunused-variable]
+Potin.f90:38:19:
+
+   38 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Potin.f90:42:57:
+
+   42 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                         1
+Warning: Unused parameter ‘pi’ declared at (1) [-Wunused-parameter]
+Potin.f90:42:53:
+
+   42 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                     1
+Warning: Unused variable ‘sigcub’ declared at (1) [-Wunused-variable]
+Potin.f90:41:38:
+
+   41 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                      1
+Warning: Unused variable ‘sr2’ declared at (1) [-Wunused-variable]
+Potin.f90:41:48:
+
+   41 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                                1
+Warning: Unused variable ‘sr3’ declared at (1) [-Wunused-variable]
+Potin.f90:41:43:
+
+   41 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                           1
+Warning: Unused variable ‘sr6’ declared at (1) [-Wunused-variable]
+Potin.f90:41:53:
+
+   41 |     REAL :: RCUTSQ, RMINSQ, SIGSQ, SR2, SR6, SR3, SR9
+      |                                                     1
+Warning: Unused variable ‘sr9’ declared at (1) [-Wunused-variable]
+Potin.f90:43:17:
+
+   43 |     REAL :: VLRC0, WLRC0
+      |                 1
+Warning: Unused variable ‘vlrc0’ declared at (1) [-Wunused-variable]
+Potin.f90:43:24:
+
+   43 |     REAL :: VLRC0, WLRC0
+      |                        1
+Warning: Unused variable ‘wlrc0’ declared at (1) [-Wunused-variable]
+Add.f90:60:20:
+
+   60 |     INTEGER :: IPULL, I
+      |                    1
+Warning: Unused variable ‘ipull’ declared at (1) [-Wunused-variable]
+Add.f90:62:40:
+
+   62 |     INTEGER :: POSXIN, POSZIN, POSYIN, J, JIN
+      |                                        1
+Warning: Unused variable ‘j’ declared at (1) [-Wunused-variable]
+Add.f90:62:45:
+
+   62 |     INTEGER :: POSXIN, POSZIN, POSYIN, J, JIN
+      |                                             1
+Warning: Unused variable ‘jin’ declared at (1) [-Wunused-variable]
+Add.f90:57:19:
+
+   57 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Add.f90:63:15:
+
+   63 |     REAL :: RXI, RYI, RZI
+      |               1
+Warning: Unused variable ‘rxi’ declared at (1) [-Wunused-variable]
+Add.f90:59:17:
+
+   59 |     REAL :: RXNEW, RYNEW, RZNEW
+      |                 1
+Warning: Unused variable ‘rxnew’ declared at (1) [-Wunused-variable]
+Add.f90:63:20:
+
+   63 |     REAL :: RXI, RYI, RZI
+      |                    1
+Warning: Unused variable ‘ryi’ declared at (1) [-Wunused-variable]
+Add.f90:59:24:
+
+   59 |     REAL :: RXNEW, RYNEW, RZNEW
+      |                        1
+Warning: Unused variable ‘rynew’ declared at (1) [-Wunused-variable]
+Add.f90:63:25:
+
+   63 |     REAL :: RXI, RYI, RZI
+      |                         1
+Warning: Unused variable ‘rzi’ declared at (1) [-Wunused-variable]
+Add.f90:59:31:
+
+   59 |     REAL :: RXNEW, RYNEW, RZNEW
+      |                               1
+Warning: Unused variable ‘rznew’ declared at (1) [-Wunused-variable]
+Out.f90:20:89:
+
+   20 | SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICALMOLECULES)
+      |                                                                                         1
+Warning: Unused dummy argument ‘canonicalmolecules’ at (1) [-Wunused-dummy-argument]
+Out.f90:38:30:
+
+   38 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                              1
+Warning: Unused variable ‘deltw’ declared at (1) [-Wunused-variable]
+Out.f90:20:34:
+
+   20 | SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICALMOLECULES)
+      |                                  1
+Warning: Unused dummy argument ‘eps’ at (1) [-Wunused-dummy-argument]
+Out.f90:35:25:
+
+   35 |     INTEGER :: NTOTALB, I
+      |                         1
+Warning: Unused variable ‘i’ declared at (1) [-Wunused-variable]
+Out.f90:20:69:
+
+   20 | SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICALMOLECULES)
+      |                                                                     1
+Warning: Unused dummy argument ‘jpasos’ at (1) [-Wunused-dummy-argument]
+Out.f90:34:33:
+
+   34 |     INTEGER :: NCONFMIN, NCONFMAX
+      |                                 1
+Warning: Unused variable ‘nconfmax’ declared at (1) [-Wunused-variable]
+Out.f90:34:23:
+
+   34 |     INTEGER :: NCONFMIN, NCONFMAX
+      |                       1
+Warning: Unused variable ‘nconfmin’ declared at (1) [-Wunused-variable]
+Out.f90:36:19:
+
+   36 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Out.f90:35:22:
+
+   35 |     INTEGER :: NTOTALB, I
+      |                      1
+Warning: Unused variable ‘ntotalb’ declared at (1) [-Wunused-variable]
+Out.f90:43:23:
+
+   43 |     REAL :: Ntotalmolec
+      |                       1
+Warning: Unused variable ‘ntotalmolec’ declared at (1) [-Wunused-variable]
+Out.f90:41:21:
+
+   41 |     LOGICAL :: OVRLAP, CREATE
+      |                     1
+Warning: Unused variable ‘ovrlap’ declared at (1) [-Wunused-variable]
+Out.f90:20:40:
+
+   20 | SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICALMOLECULES)
+      |                                        1
+Warning: Unused dummy argument ‘rcut’ at (1) [-Wunused-dummy-argument]
+Out.f90:20:29:
+
+   20 | SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICALMOLECULES)
+      |                             1
+Warning: Unused dummy argument ‘sigma’ at (1) [-Wunused-dummy-argument]
+Out.f90:20:54:
+
+   20 | SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICALMOLECULES)
+      |                                                      1
+Warning: Unused dummy argument ‘w’ at (1) [-Wunused-dummy-argument]
+Out.f90:44:18:
+
+   44 |     REAL :: ZTOTAL
+      |                  1
+Warning: Unused variable ‘ztotal’ declared at (1) [-Wunused-variable]
+Potout.f90:38:19:
+
+   38 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Potout.f90:42:57:
+
+   42 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                         1
+Warning: Unused parameter ‘pi’ declared at (1) [-Wunused-parameter]
+Potout.f90:40:16:
+
+   40 |     REAL :: RCUT, SIGMA, DELTW
+      |                1
+Warning: Unused variable ‘rcut’ declared at (1) [-Wunused-variable]
+Potout.f90:41:18:
+
+   41 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                  1
+Warning: Unused variable ‘rcutsq’ declared at (1) [-Wunused-variable]
+Potout.f90:42:53:
+
+   42 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                     1
+Warning: Unused variable ‘sigcub’ declared at (1) [-Wunused-variable]
+Potout.f90:40:23:
+
+   40 |     REAL :: RCUT, SIGMA, DELTW
+      |                       1
+Warning: Unused variable ‘sigma’ declared at (1) [-Wunused-variable]
+Potout.f90:41:25:
+
+   41 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                         1
+Warning: Unused variable ‘sigsq’ declared at (1) [-Wunused-variable]
+Potout.f90:41:30:
+
+   41 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                              1
+Warning: Unused variable ‘sr2’ declared at (1) [-Wunused-variable]
+Potout.f90:41:40:
+
+   41 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                                        1
+Warning: Unused variable ‘sr3’ declared at (1) [-Wunused-variable]
+Potout.f90:41:35:
+
+   41 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                                   1
+Warning: Unused variable ‘sr6’ declared at (1) [-Wunused-variable]
+Potout.f90:41:45:
+
+   41 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                                             1
+Warning: Unused variable ‘sr9’ declared at (1) [-Wunused-variable]
+Potout.f90:43:17:
+
+   43 |     REAL :: VLRC0, WLRC0
+      |                 1
+Warning: Unused variable ‘vlrc0’ declared at (1) [-Wunused-variable]
+Potout.f90:43:24:
+
+   43 |     REAL :: VLRC0, WLRC0
+      |                        1
+Warning: Unused variable ‘wlrc0’ declared at (1) [-Wunused-variable]
+Adpotout.f90:51:21:
+
+   51 |     INTEGER :: J, JIN, I1, I, K
+      |                     1
+Warning: Unused variable ‘jin’ declared at (1) [-Wunused-variable]
+Adpotout.f90:47:17:
+
+   47 |     INTEGER :: NC
+      |                 1
+Warning: Unused variable ‘nc’ declared at (1) [-Wunused-variable]
+Adpotout.f90:43:19:
+
+   43 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Adpotout.f90:49:57:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                         1
+Warning: Unused variable ‘pi’ declared at (1) [-Wunused-variable]
+Adpotout.f90:45:16:
+
+   45 |     REAL :: RCUT, SIGMA
+      |                1
+Warning: Unused variable ‘rcut’ declared at (1) [-Wunused-variable]
+Adpotout.f90:48:18:
+
+   48 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                  1
+Warning: Unused variable ‘rcutsq’ declared at (1) [-Wunused-variable]
+Adpotout.f90:49:35:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                   1
+Warning: Unused variable ‘rijsq’ declared at (1) [-Wunused-variable]
+Adpotout.f90:49:16:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                1
+Warning: Unused variable ‘rxij’ declared at (1) [-Wunused-variable]
+Adpotout.f90:49:22:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                      1
+Warning: Unused variable ‘ryij’ declared at (1) [-Wunused-variable]
+Adpotout.f90:49:28:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                            1
+Warning: Unused variable ‘rzij’ declared at (1) [-Wunused-variable]
+Adpotout.f90:49:53:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                                     1
+Warning: Unused variable ‘sigcub’ declared at (1) [-Wunused-variable]
+Adpotout.f90:45:23:
+
+   45 |     REAL :: RCUT, SIGMA
+      |                       1
+Warning: Unused variable ‘sigma’ declared at (1) [-Wunused-variable]
+Adpotout.f90:48:25:
+
+   48 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                         1
+Warning: Unused variable ‘sigsq’ declared at (1) [-Wunused-variable]
+Adpotout.f90:48:30:
+
+   48 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                              1
+Warning: Unused variable ‘sr2’ declared at (1) [-Wunused-variable]
+Adpotout.f90:48:40:
+
+   48 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                                        1
+Warning: Unused variable ‘sr3’ declared at (1) [-Wunused-variable]
+Adpotout.f90:48:35:
+
+   48 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                                   1
+Warning: Unused variable ‘sr6’ declared at (1) [-Wunused-variable]
+Adpotout.f90:48:45:
+
+   48 |     REAL :: RCUTSQ, SIGSQ, SR2, SR6, SR3, SR9, RXI, RYI, RZI
+      |                                             1
+Warning: Unused variable ‘sr9’ declared at (1) [-Wunused-variable]
+Adpotout.f90:49:40:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                        1
+Warning: Unused variable ‘vij’ declared at (1) [-Wunused-variable]
+Adpotout.f90:50:17:
+
+   50 |     REAL :: VLRC0, WLRC0
+      |                 1
+Warning: Unused variable ‘vlrc0’ declared at (1) [-Wunused-variable]
+Adpotout.f90:49:45:
+
+   49 |     REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, SIGCUB, PI
+      |                                             1
+Warning: Unused variable ‘wij’ declared at (1) [-Wunused-variable]
+Adpotout.f90:50:24:
+
+   50 |     REAL :: VLRC0, WLRC0
+      |                        1
+Warning: Unused variable ‘wlrc0’ declared at (1) [-Wunused-variable]
+Remove.f90:10:19:
+
+   10 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Move.f90:58:15:
+
+   58 |     REAL :: A11, A12, A13
+      |               1
+Warning: Unused variable ‘a11’ declared at (1) [-Wunused-variable]
+Move.f90:58:20:
+
+   58 |     REAL :: A11, A12, A13
+      |                    1
+Warning: Unused variable ‘a12’ declared at (1) [-Wunused-variable]
+Move.f90:58:25:
+
+   58 |     REAL :: A11, A12, A13
+      |                         1
+Warning: Unused variable ‘a13’ declared at (1) [-Wunused-variable]
+Move.f90:59:15:
+
+   59 |     REAL :: A21, A22, A23
+      |               1
+Warning: Unused variable ‘a21’ declared at (1) [-Wunused-variable]
+Move.f90:59:20:
+
+   59 |     REAL :: A21, A22, A23
+      |                    1
+Warning: Unused variable ‘a22’ declared at (1) [-Wunused-variable]
+Move.f90:59:25:
+
+   59 |     REAL :: A21, A22, A23
+      |                         1
+Warning: Unused variable ‘a23’ declared at (1) [-Wunused-variable]
+Move.f90:60:15:
+
+   60 |     REAL :: A31, A32, A33
+      |               1
+Warning: Unused variable ‘a31’ declared at (1) [-Wunused-variable]
+Move.f90:60:20:
+
+   60 |     REAL :: A31, A32, A33
+      |                    1
+Warning: Unused variable ‘a32’ declared at (1) [-Wunused-variable]
+Move.f90:60:25:
+
+   60 |     REAL :: A31, A32, A33
+      |                         1
+Warning: Unused variable ‘a33’ declared at (1) [-Wunused-variable]
+Move.f90:55:17:
+
+   55 |     REAL :: ANGUL
+      |                 1
+Warning: Unused parameter ‘angul’ declared at (1) [-Wunused-parameter]
+Move.f90:65:19:
+
+   65 |     REAL :: DELTANG
+      |                   1
+Warning: Unused variable ‘deltang’ declared at (1) [-Wunused-variable]
+Move.f90:66:21:
+
+   66 |     REAL :: deltaxspc, deltayspc, deltazspc
+      |                     1
+Warning: Unused variable ‘deltaxspc’ declared at (1) [-Wunused-variable]
+Move.f90:66:32:
+
+   66 |     REAL :: deltaxspc, deltayspc, deltazspc
+      |                                1
+Warning: Unused variable ‘deltayspc’ declared at (1) [-Wunused-variable]
+Move.f90:66:43:
+
+   66 |     REAL :: deltaxspc, deltayspc, deltazspc
+      |                                           1
+Warning: Unused variable ‘deltazspc’ declared at (1) [-Wunused-variable]
+Move.f90:43:38:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                                      1
+Warning: Unused variable ‘deltdb’ declared at (1) [-Wunused-variable]
+Move.f90:43:23:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                       1
+Warning: Unused variable ‘deltv’ declared at (1) [-Wunused-variable]
+Move.f90:43:46:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                                              1
+Warning: Unused variable ‘deltva’ declared at (1) [-Wunused-variable]
+Move.f90:61:21:
+
+   61 |     REAL :: DELTVADIN, DELTVIN
+      |                     1
+Warning: Unused variable ‘deltvadin’ declared at (1) [-Wunused-variable]
+Move.f90:61:30:
+
+   61 |     REAL :: DELTVADIN, DELTVIN
+      |                              1
+Warning: Unused variable ‘deltvin’ declared at (1) [-Wunused-variable]
+Move.f90:43:30:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                              1
+Warning: Unused variable ‘deltw’ declared at (1) [-Wunused-variable]
+Move.f90:20:35:
+
+   20 | SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                                   1
+Warning: Unused dummy argument ‘eps’ at (1) [-Wunused-dummy-argument]
+Move.f90:50:23:
+
+   50 |     INTEGER :: I, IJ, J
+      |                       1
+Warning: Unused variable ‘j’ declared at (1) [-Wunused-variable]
+Move.f90:20:70:
+
+   20 | SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                                                                      1
+Warning: Unused dummy argument ‘jpasos’ at (1) [-Wunused-dummy-argument]
+Move.f90:41:17:
+
+   41 |     INTEGER :: NC
+      |                 1
+Warning: Unused variable ‘nc’ declared at (1) [-Wunused-variable]
+Move.f90:39:19:
+
+   39 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+Move.f90:42:21:
+
+   42 |     LOGICAL :: OVRLAP, CREATE
+      |                     1
+Warning: Unused variable ‘ovrlap’ declared at (1) [-Wunused-variable]
+Move.f90:68:21:
+
+   68 |     INTEGER :: POSXIN, POSYIN, POSZIN
+      |                     1
+Warning: Unused variable ‘posxin’ declared at (1) [-Wunused-variable]
+Move.f90:68:29:
+
+   68 |     INTEGER :: POSXIN, POSYIN, POSZIN
+      |                             1
+Warning: Unused variable ‘posyin’ declared at (1) [-Wunused-variable]
+Move.f90:68:37:
+
+   68 |     INTEGER :: POSXIN, POSYIN, POSZIN
+      |                                     1
+Warning: Unused variable ‘poszin’ declared at (1) [-Wunused-variable]
+Move.f90:20:41:
+
+   20 | SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                                         1
+Warning: Unused dummy argument ‘rcut’ at (1) [-Wunused-dummy-argument]
+Move.f90:46:18:
+
+   46 |     REAL :: sorteo, b
+      |                  1
+Warning: Unused variable ‘sorteo’ declared at (1) [-Wunused-variable]
+Move.f90:69:22:
+
+   69 |     LOGICAL :: TESTIGO, TESTIGO2
+      |                      1
+Warning: Unused variable ‘testigo’ declared at (1) [-Wunused-variable]
+Move.f90:69:32:
+
+   69 |     LOGICAL :: TESTIGO, TESTIGO2
+      |                                1
+Warning: Unused variable ‘testigo2’ declared at (1) [-Wunused-variable]
+Move.f90:20:55:
+
+   20 | SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                                                       1
+Warning: Unused dummy argument ‘w’ at (1) [-Wunused-dummy-argument]
+Move.f90:20:23:
+
+   20 | SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                       1
+Warning: Unused dummy argument ‘z’ at (1) [-Wunused-dummy-argument]
+change.f90:60:15:
+
+   60 |     REAL :: A11, A12, A13
+      |               1
+Warning: Unused variable ‘a11’ declared at (1) [-Wunused-variable]
+change.f90:60:20:
+
+   60 |     REAL :: A11, A12, A13
+      |                    1
+Warning: Unused variable ‘a12’ declared at (1) [-Wunused-variable]
+change.f90:60:25:
+
+   60 |     REAL :: A11, A12, A13
+      |                         1
+Warning: Unused variable ‘a13’ declared at (1) [-Wunused-variable]
+change.f90:61:15:
+
+   61 |     REAL :: A21, A22, A23
+      |               1
+Warning: Unused variable ‘a21’ declared at (1) [-Wunused-variable]
+change.f90:61:20:
+
+   61 |     REAL :: A21, A22, A23
+      |                    1
+Warning: Unused variable ‘a22’ declared at (1) [-Wunused-variable]
+change.f90:61:25:
+
+   61 |     REAL :: A21, A22, A23
+      |                         1
+Warning: Unused variable ‘a23’ declared at (1) [-Wunused-variable]
+change.f90:62:15:
+
+   62 |     REAL :: A31, A32, A33
+      |               1
+Warning: Unused variable ‘a31’ declared at (1) [-Wunused-variable]
+change.f90:62:20:
+
+   62 |     REAL :: A31, A32, A33
+      |                    1
+Warning: Unused variable ‘a32’ declared at (1) [-Wunused-variable]
+change.f90:62:25:
+
+   62 |     REAL :: A31, A32, A33
+      |                         1
+Warning: Unused variable ‘a33’ declared at (1) [-Wunused-variable]
+change.f90:47:41:
+
+   47 |     REAL :: DELTAX, DELTAY, DELTAZ, DELTA
+      |                                         1
+Warning: Unused variable ‘delta’ declared at (1) [-Wunused-variable]
+change.f90:67:19:
+
+   67 |     REAL :: DELTANG
+      |                   1
+Warning: Unused variable ‘deltang’ declared at (1) [-Wunused-variable]
+change.f90:47:18:
+
+   47 |     REAL :: DELTAX, DELTAY, DELTAZ, DELTA
+      |                  1
+Warning: Unused variable ‘deltax’ declared at (1) [-Wunused-variable]
+change.f90:47:26:
+
+   47 |     REAL :: DELTAX, DELTAY, DELTAZ, DELTA
+      |                          1
+Warning: Unused variable ‘deltay’ declared at (1) [-Wunused-variable]
+change.f90:47:34:
+
+   47 |     REAL :: DELTAX, DELTAY, DELTAZ, DELTA
+      |                                  1
+Warning: Unused variable ‘deltaz’ declared at (1) [-Wunused-variable]
+change.f90:43:38:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                                      1
+Warning: Unused variable ‘deltdb’ declared at (1) [-Wunused-variable]
+change.f90:43:23:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                       1
+Warning: Unused variable ‘deltv’ declared at (1) [-Wunused-variable]
+change.f90:43:46:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                                              1
+Warning: Unused variable ‘deltva’ declared at (1) [-Wunused-variable]
+change.f90:43:30:
+
+   43 |     REAL :: BETA, DELTV, DELTW, DELTDB, DELTVA
+      |                              1
+Warning: Unused variable ‘deltw’ declared at (1) [-Wunused-variable]
+change.f90:20:37:
+
+   20 | SUBROUTINE CHANGE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                                     1
+Warning: Unused dummy argument ‘eps’ at (1) [-Wunused-dummy-argument]
+change.f90:52:20:
+
+   52 |     INTEGER :: I, IJ, J
+      |                    1
+Warning: Unused variable ‘ij’ declared at (1) [-Wunused-variable]
+change.f90:52:23:
+
+   52 |     INTEGER :: I, IJ, J
+      |                       1
+Warning: Unused variable ‘j’ declared at (1) [-Wunused-variable]
+change.f90:20:72:
+
+   20 | SUBROUTINE CHANGE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                                                                        1
+Warning: Unused dummy argument ‘jpasos’ at (1) [-Wunused-dummy-argument]
+change.f90:41:17:
+
+   41 |     INTEGER :: NC
+      |                 1
+Warning: Unused variable ‘nc’ declared at (1) [-Wunused-variable]
+change.f90:39:19:
+
+   39 |     INTEGER :: NMAX
+      |                   1
+Warning: Unused parameter ‘nmax’ declared at (1) [-Wunused-parameter]
+change.f90:69:21:
+
+   69 |     INTEGER :: POSXIN, POSYIN, POSZIN
+      |                     1
+Warning: Unused variable ‘posxin’ declared at (1) [-Wunused-variable]
+change.f90:69:29:
+
+   69 |     INTEGER :: POSXIN, POSYIN, POSZIN
+      |                             1
+Warning: Unused variable ‘posyin’ declared at (1) [-Wunused-variable]
+change.f90:69:37:
+
+   69 |     INTEGER :: POSXIN, POSYIN, POSZIN
+      |                                     1
+Warning: Unused variable ‘poszin’ declared at (1) [-Wunused-variable]
+change.f90:46:18:
+
+   46 |     REAL :: sorteo, b
+      |                  1
+Warning: Unused variable ‘sorteo’ declared at (1) [-Wunused-variable]
+change.f90:70:22:
+
+   70 |     LOGICAL :: TESTIGO, TESTIGO2
+      |                      1
+Warning: Unused variable ‘testigo’ declared at (1) [-Wunused-variable]
+change.f90:70:32:
+
+   70 |     LOGICAL :: TESTIGO, TESTIGO2
+      |                                1
+Warning: Unused variable ‘testigo2’ declared at (1) [-Wunused-variable]
+change.f90:20:57:
+
+   20 | SUBROUTINE CHANGE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
+      |                                                         1
+Warning: Unused dummy argument ‘w’ at (1) [-Wunused-dummy-argument]
+Ranf.f90:1:24:
+
+    1 | REAL FUNCTION RANF(DUMMY)
+      |                        1
+Warning: Unused dummy argument ‘dummy’ at (1) [-Wunused-dummy-argument]
+Main.f90:92:26:
+
+   92 |    real              DELTW
+      |                          1
+Warning: Unused variable ‘deltw’ declared at (1) [-Wunused-variable]
+Main.f90:88:26:
+
+   88 |    real              RXNEW, RYNEW, RZNEW
+      |                          1
+Warning: Unused variable ‘rxnew’ declared at (1) [-Wunused-variable]
+Main.f90:88:33:
+
+   88 |    real              RXNEW, RYNEW, RZNEW
+      |                                 1
+Warning: Unused variable ‘rynew’ declared at (1) [-Wunused-variable]
+Main.f90:88:40:
+
+   88 |    real              RXNEW, RYNEW, RZNEW
+      |                                        1
+Warning: Unused variable ‘rznew’ declared at (1) [-Wunused-variable]
