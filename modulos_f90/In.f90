@@ -16,19 +16,21 @@
       
 SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANONICALMOLECULES)
 
-  USE InputParams, ONLY: acel, acelx, acely, acelz, bcx, bcy, bcz
+  USE PBC_Mod, ONLY: rk, cart_to_frac, frac_to_cart
+  USE GeomUtils, ONLY: wrap_by_pbc
+  USE InputParams, ONLY: cellR
   USE AdsorbateInput, ONLY: RX0, RY0, RZ0, NMOLEC,NATOM
   USE SimulationData, ONLY: RX1, RY1, RZ1, EXNEW, EYNEW, EZNEW, N
   USE RotationModule
-  
+
   IMPLICIT NONE
-  
+
   ! Argumentos de la subrutina
   INTEGER :: JPASOS, CANONICALMOLECULES
   REAL :: TEMP, Z(10), SIGMA, EPS, RCUT
   REAL :: V, VA, VG, W, CR
   LOGICAL :: CREATE
-  
+
   ! Variables locales
   INTEGER :: NMAX
   PARAMETER (NMAX = 15000)
@@ -46,15 +48,17 @@ SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANON
   REAL :: EX, EY, EZ, RR
   REAL :: DELTVA, DELTV, DELTW, DELTCB
   REAL, DIMENSION(3, 3) :: R
-  
+  REAL(rk) :: pos(3), s(3)  ! Para wrap de posiciones
+
   ! Inicialización de variables
   EXNEW = 0.0
   EYNEW = 0.0
   EZNEW = 0.0
-  
-  XMAX = ACELX / ACEL
-  YMAX = ACELY / ACEL
-  ZMAX = ACELZ / ACEL
+
+  ! Dimensiones de celda reducida
+  XMAX = real(cellR%a_len)
+  YMAX = real(cellR%b_len)
+  ZMAX = real(cellR%c_len)
   
   CREATE = .FALSE.
   BETA = 1.0 / TEMP
@@ -111,11 +115,16 @@ SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANON
      RX1(I) = RX1(I) + RXNEW
      RY1(I) = RY1(I) + RYNEW
      RZ1(I) = RZ1(I) + RZNEW
-     
-     RX1(I) = RX1(I) - BCX * XMAX * ANINT(RX1(I) / XMAX)
-     RY1(I) = RY1(I) - BCY * YMAX * ANINT(RY1(I) / YMAX)
-     RZ1(I) = RZ1(I) - BCZ * ZMAX * ANINT(RZ1(I) / ZMAX)
-     
+
+     ! Wrap usando cellR (respeta flags PBC)
+     pos = [real(RX1(I),rk), real(RY1(I),rk), real(RZ1(I),rk)]
+     s = cart_to_frac(cellR, pos)
+     call wrap_by_pbc(s(1), s(2), s(3), cellR%pbc(1), cellR%pbc(2), cellR%pbc(3))
+     pos = frac_to_cart(cellR, s)
+     RX1(I) = real(pos(1))
+     RY1(I) = real(pos(2))
+     RZ1(I) = real(pos(3))
+
      IF (ABS(RX1(I)) > 0.5) RETURN
      IF (ABS(RY1(I)) > 0.5) RETURN
      IF (ABS(RZ1(I)) > 0.5) RETURN

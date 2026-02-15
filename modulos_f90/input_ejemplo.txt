@@ -1,0 +1,50 @@
+! ============================================================
+! Archivo de entrada para simulación GCMC (formato clave-valor)
+! ============================================================
+! Líneas que empiezan con ! son comentarios
+! Formato: clave valor (separados por espacio)
+
+! --- Parámetros de presión ---
+p           0.1         ! Presión inicial (cm Hg)
+dp          100.0       ! Presión final (para isoterma logarítmica)
+
+! --- Parámetros de Lennard-Jones ---
+sigmetano   3.73        ! Sigma de metano (Angstrom)
+eps         119.8       ! Epsilon (K)
+
+! --- Geometría de la celda ---
+acel        40.0        ! Longitud de referencia
+acelx       40.0        ! Longitud en x
+acely       40.0        ! Longitud en y
+acelz       20.0        ! Longitud en z
+
+! --- Ángulos de celda (opcional, por defecto 90) ---
+! angux       90.0      ! Ángulo alpha (grados)
+! anguy       90.0      ! Ángulo beta (grados)
+! anguz       90.0      ! Ángulo gamma (grados)
+
+! --- Condiciones de borde periódicas ---
+bcx         1           ! PBC en x (1=sí, 0=no)
+bcy         1           ! PBC en y
+bcz         0           ! PBC en z (0 para slab)
+
+! --- Dimensionalidad (opcional, por defecto 3) ---
+! dim         3
+
+! --- Otros parámetros ---
+diel        1.0         ! Constante dieléctrica
+t           298.15      ! Temperatura (K)
+mat         50          ! Tamaño de matriz
+nam         carbo.txt   ! Archivo de superficie
+
+! --- Control de simulación ---
+isot        10          ! Puntos de isoterma
+ijpasos     100         ! Pasos para promediar
+ikpasos     1000        ! Pasos MC por promedio
+mult2       1           ! Multiplicador
+ensemble    2           ! 0=canónico, 1=GC restart, 2=GC desde cero
+
+! --- Estadística ---
+ncellmat    10          ! Tamaño matriz estadística (max 50)
+nestado     1           ! Número de estado
+canonicalmolecules 0    ! Moléculas canónicas

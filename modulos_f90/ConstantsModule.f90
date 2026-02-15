@@ -1,4 +1,5 @@
 MODULE PhysicalConstants
+  USE PBC_Mod, only: rk
   IMPLICIT NONE
 
   private
@@ -8,7 +9,8 @@ MODULE PhysicalConstants
 CONTAINS
   SUBROUTINE ComputeConstants(SIGMETANO, SIGMA, EPS, AK_input, diel)
     IMPLICIT NONE
-    REAL, INTENT(IN) :: SIGMETANO, SIGMA, EPS, AK_input, diel
+    REAL(rk), INTENT(IN) :: SIGMETANO, EPS, diel
+    REAL, INTENT(IN) :: SIGMA, AK_input
     
     ! Compute physical constants
     AK = AK_input / 6.023E23

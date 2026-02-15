@@ -5,7 +5,8 @@
 !    ** UADS(-225:225,-225:225,-225:225),USS(1000),FLAG(1000)
 !------------------------------------------------------------------------
 SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
-  USE InputParams, only: acel,acelx, acely, acelz,bcx, bcy,bcz,mat
+  USE PBC_Mod, only: rk, min_image
+  USE InputParams, only: mat, cellR
   USE PhysicalConstants, only: FCLEC, FACTORELEC
   USE SimulationData
   IMPLICIT NONE
@@ -15,17 +16,13 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
   REAL :: RXI, RYI, RZI, DELTV, SIGMA1, FACTOR, RCUTSQ, SIGSQ, SIGCUB
   REAL :: RMIN, RMINSQ, SR3, SR9, SR2, SR6, DELTW
   REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, RIJ, VIJ, WIJ, VIJR, ZESACT, ZI
-  REAL :: diel, xmax, ymax, zmax, RCUT
+  REAL :: diel, RCUT
+  REAL(rk) :: dr(3)  ! Vector mínima imagen
   INTEGER :: IOSTAT
   
   ! Inicialización de constantes
   PI = 3.14159265
   RCELE = 0.5  ! Radio de corte potencial electrostático
-  
-  ! Calcular dimensiones máximas
-  xmax = acelx / acel
-  ymax = acely / acel
-  zmax = acelz / acel
 
   ! Abrir archivo de parámetros
   OPEN(11, FILE='LJ.dat', IOSTAT=IOSTAT)
@@ -83,13 +80,12 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
                     SR3 = (SIGMA1 / RCUT) ** 3
                     SR9 = SR3 ** 3
                     
-                    RXIJ = RXI - RXC(J)
-                    RYIJ = RYI - RYC(J)
-                    RZIJ = RZI - RZC(J)
-                    
-                    RXIJ = RXIJ - BCX * xmax * ANINT(RXIJ / xmax)
-                    RYIJ = RYIJ - BCY * ymax * ANINT(RYIJ / ymax)
-                    RZIJ = RZIJ - BCZ * zmax * ANINT(RZIJ / zmax)
+                    ! Vector mínima imagen usando cellR (unidades reducidas)
+                    dr = min_image(cellR, [real(RXC(J),rk), real(RYC(J),rk), real(RZC(J),rk)], &
+                                          [real(RXI,rk), real(RYI,rk), real(RZI,rk)])
+                    RXIJ = real(dr(1))
+                    RYIJ = real(dr(2))
+                    RZIJ = real(dr(3))
                     RIJSQ = RXIJ * RXIJ + RYIJ * RYIJ + RZIJ * RZIJ
                     
                     IF (RIJSQ < RMINSQ) THEN

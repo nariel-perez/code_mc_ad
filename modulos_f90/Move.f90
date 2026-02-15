@@ -19,7 +19,9 @@
 
 SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
 
-    USE InputParams, ONLY: acel, acelx, acely, acelz, bcx, bcy, bcz
+    USE PBC_Mod, ONLY: rk, cart_to_frac, frac_to_cart
+    USE GeomUtils, ONLY: wrap_by_pbc
+    USE InputParams, ONLY: cellR
     USE AdsorbateInput, ONLY: RX0, RY0, RZ0, NATOM, NMOLEC
     USE SimulationData, ONLY: RX, RY, RZ, RX1, RY1, RZ1,N, LOCATE, ANX, ANGY, ANZ, &
          EXNEW, EYNEW, EZNEW
@@ -57,13 +59,8 @@ SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
     REAL :: DELTCB
     REAL :: rxnew, rynew, rznew
     REAL :: rxi, ryi, rzi
-    REAL :: xmax, ymax, zmax
     REAL, DIMENSION(3, 3) :: R
-
-    ! Inicialización de variables
-    xmax = ACELX / ACEL
-    ymax = ACELY / ACEL
-    zmax = ACELZ / ACEL
+    REAL(rk) :: pos(3), s(3)  ! Para wrap de posiciones
 
     CREATE = .FALSE.
     GHOST = .FALSE.
@@ -171,9 +168,14 @@ SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
                     RY1(I) = RY1(I) + rynew
                     RZ1(I) = RZ1(I) + rznew
 
-                    RX1(I) = RX1(I) - BCX * xmax * ANINT(RX1(I) / xmax)
-                    RY1(I) = RY1(I) - BCY * ymax * ANINT(RY1(I) / ymax)
-                    RZ1(I) = RZ1(I) - BCZ * zmax * ANINT(RZ1(I) / zmax)
+                    ! Wrap usando cellR (respeta flags PBC)
+                    pos = [real(RX1(I),rk), real(RY1(I),rk), real(RZ1(I),rk)]
+                    s = cart_to_frac(cellR, pos)
+                    call wrap_by_pbc(s(1), s(2), s(3), cellR%pbc(1), cellR%pbc(2), cellR%pbc(3))
+                    pos = frac_to_cart(cellR, s)
+                    RX1(I) = real(pos(1))
+                    RY1(I) = real(pos(2))
+                    RZ1(I) = real(pos(3))
 
                     IF (ABS(RX1(I)) > 0.5) RETURN
                     IF (ABS(RY1(I)) > 0.5) RETURN
@@ -197,9 +199,14 @@ SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
                 RY1(I) = RY1(I) + DELTAY
                 RZ1(I) = RZ1(I) + DELTAZ
 
-                RX1(I) = RX1(I) - BCX * xmax * ANINT(RX1(I) / xmax)
-                RY1(I) = RY1(I) - BCY * ymax * ANINT(RY1(I) / ymax)
-                RZ1(I) = RZ1(I) - BCZ * zmax * ANINT(RZ1(I) / zmax)
+                ! Wrap usando cellR (respeta flags PBC)
+                pos = [real(RX1(I),rk), real(RY1(I),rk), real(RZ1(I),rk)]
+                s = cart_to_frac(cellR, pos)
+                call wrap_by_pbc(s(1), s(2), s(3), cellR%pbc(1), cellR%pbc(2), cellR%pbc(3))
+                pos = frac_to_cart(cellR, s)
+                RX1(I) = real(pos(1))
+                RY1(I) = real(pos(2))
+                RZ1(I) = real(pos(3))
 
                 IF (ABS(RX1(I)) > 0.5) RETURN
                 IF (ABS(RY1(I)) > 0.5) RETURN

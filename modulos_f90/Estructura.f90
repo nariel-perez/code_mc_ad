@@ -1,4 +1,5 @@
 MODULE EstructuraModule
+  USE PBC_Mod, only: rk
   USE InputParams, only: acel, acelx, acely, acelz
   USE PhysicalConstants
   USE SimulationData
@@ -8,9 +9,10 @@ CONTAINS
     SUBROUTINE estructura(eps, nam, sigma, sigmetano, NC, diel)
         IMPLICIT NONE
         ! Variable declarations
-        CHARACTER(LEN=16), INTENT(IN) :: nam
-        CHARACTER(LEN=32) :: nampro
-        REAL, INTENT(IN) :: eps, sigma, sigmetano, diel
+        CHARACTER(LEN=*), INTENT(IN) :: nam
+        CHARACTER(LEN=128) :: nampro
+        REAL(rk), INTENT(IN) :: eps, sigmetano, diel
+        REAL, INTENT(IN) :: sigma
         INTEGER, INTENT(INOUT) :: NC
         INTEGER :: imax, i, io_status, ipos
 

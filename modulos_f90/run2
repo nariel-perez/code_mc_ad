@@ -5,8 +5,10 @@ FFLAGS="-O3 -mcmodel=medium -Wall -Wextra -Wunused -Wconversion"
 
 ######################
 ############ PROCESADO
-#si o si primero
+#si o si primero (orden de dependencias: PBC_Mod -> GeomUtils -> InputParams)
 
+gfortran $FFLAGS -c PBC_Mod.f90
+gfortran $FFLAGS -c GeomUtils.f90
 gfortran $FFLAGS -c InputParams.f90
 gfortran $FFLAGS -c AdsorbateInput.f90
 gfortran $FFLAGS -c SimulationData.f90
@@ -48,7 +50,7 @@ gfortran $FFLAGS -c Main.f90
 ###compilacion 
 # Link all compiled object files into the final executable
 gfortran $FFLAGS -o simulation.exe \
-    InputParams.o AdsorbateInput.o ConstantsModule.o SimulationData.o RotationModule.o \
+    PBC_Mod.o GeomUtils.o InputParams.o AdsorbateInput.o ConstantsModule.o SimulationData.o RotationModule.o \
     Add.o Adpotin.o Adpotout.o change.o estadistica.o \
     Estructura.o In.o Main.o Move.o Out.o Potencial.o PotencialFF.o \
     Potin.o Potout.o Ranf.o Remove.o

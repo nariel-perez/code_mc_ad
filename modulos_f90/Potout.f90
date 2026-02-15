@@ -24,7 +24,8 @@
 
 
 SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
-    USE InputParams, ONLY:  acel, acelx, acely, acelz, bcx, bcy, bcz
+    USE PBC_Mod, ONLY: rk, min_image
+    USE InputParams, ONLY: cellR
     USE AdsorbateInput, ONLY: NATOMKIND, NMOLEC,NATOM
     USE SimulationData, ONLY: RX, RY, RZ, N, LOCATE, &
                               USS
@@ -43,12 +44,7 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
     INTEGER :: I, K
     REAL :: RIJ
     INTEGER :: IDIST
-    REAL :: XMAX, YMAX, ZMAX
-
-    ! Inicialización de variables
-    XMAX = ACELX / ACEL
-    YMAX = ACELY / ACEL
-    ZMAX = ACELZ / ACEL
+    REAL(rk) :: dr(3)  ! Vector mínima imagen
 
     ! Inicialización de acumuladores
     DELTV = 0.0
@@ -73,15 +69,12 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
                     DO K = 1, NATOM(I)
                         JPOT = NATOMKIND(K, I)
 
-                        ! Calcular distancias entre átomos
-                        RXIJ = RXI - RX(JIN, K, I)
-                        RYIJ = RYI - RY(JIN, K, I)
-                        RZIJ = RZI - RZ(JIN, K, I)
-
-                        ! Ajustar distancias dentro de los límites de la caja de simulación
-                        RXIJ = RXIJ - BCX * XMAX * ANINT(RXIJ / XMAX)
-                        RYIJ = RYIJ - BCY * YMAX * ANINT(RYIJ / YMAX)
-                        RZIJ = RZIJ - BCZ * ZMAX * ANINT(RZIJ / ZMAX)
+                        ! Calcular vector mínima imagen usando cellR
+                        dr = min_image(cellR, [real(RX(JIN,K,I),rk), real(RY(JIN,K,I),rk), real(RZ(JIN,K,I),rk)], &
+                                              [real(RXI,rk), real(RYI,rk), real(RZI,rk)])
+                        RXIJ = real(dr(1))
+                        RYIJ = real(dr(2))
+                        RZIJ = real(dr(3))
 
                         ! Calcular la distancia al cuadrado
                         RIJSQ = RXIJ * RXIJ + RYIJ * RYIJ + RZIJ * RZIJ
@@ -108,15 +101,12 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
                         DO K = 1, NATOM(I)
                             JPOT = NATOMKIND(K, I)
 
-                            ! Calcular distancias entre átomos
-                            RXIJ = RXI - RX(JIN, K, I)
-                            RYIJ = RYI - RY(JIN, K, I)
-                            RZIJ = RZI - RZ(JIN, K, I)
-
-                            ! Ajustar distancias dentro de los límites de la caja de simulación
-                            RXIJ = RXIJ - BCX * XMAX * ANINT(RXIJ / XMAX)
-                            RYIJ = RYIJ - BCY * YMAX * ANINT(RYIJ / YMAX)
-                            RZIJ = RZIJ - BCZ * ZMAX * ANINT(RZIJ / ZMAX)
+                            ! Calcular vector mínima imagen usando cellR
+                            dr = min_image(cellR, [real(RX(JIN,K,I),rk), real(RY(JIN,K,I),rk), real(RZ(JIN,K,I),rk)], &
+                                                  [real(RXI,rk), real(RYI,rk), real(RZI,rk)])
+                            RXIJ = real(dr(1))
+                            RYIJ = real(dr(2))
+                            RZIJ = real(dr(3))
 
                             ! Calcular la distancia al cuadrado
                             RIJSQ = RXIJ * RXIJ + RYIJ * RYIJ + RZIJ * RZIJ
