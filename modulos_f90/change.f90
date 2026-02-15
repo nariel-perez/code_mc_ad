@@ -191,14 +191,14 @@ SUBROUTINE CHANGE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
         pos = [real(RX1(I),rk), real(RY1(I),rk), real(RZ1(I),rk)]
         s = cart_to_frac(cellR, pos)
         call wrap_by_pbc(s(1), s(2), s(3), cellR%pbc(1), cellR%pbc(2), cellR%pbc(3))
+        ! Rechazar si fuera de caja en ejes no periódicos
+        if (.not. cellR%pbc(1) .and. abs(s(1)) > 0.5_rk) RETURN
+        if (.not. cellR%pbc(2) .and. abs(s(2)) > 0.5_rk) RETURN
+        if (.not. cellR%pbc(3) .and. abs(s(3)) > 0.5_rk) RETURN
         pos = frac_to_cart(cellR, s)
         RX1(I) = real(pos(1))
         RY1(I) = real(pos(2))
         RZ1(I) = real(pos(3))
-
-        IF (ABS(RX1(I)) > 0.5) RETURN
-        IF (ABS(RY1(I)) > 0.5) RETURN
-        IF (ABS(RZ1(I)) > 0.5) RETURN
     END DO
 
     ! Calcular el potencial de adsorción para la nueva molécula

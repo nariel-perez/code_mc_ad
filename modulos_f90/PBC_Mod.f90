@@ -33,6 +33,7 @@ module PBC_Mod
    public :: wrap_frac_centered, wrap_cart, pbc_apply_point
    public :: min_image
    public :: pbc_ORTO        ! rutina legacy rápida ortorrómbica
+   public :: cell_volume     ! determinante de la celda (volumen)
 
 
    ! alias legible
@@ -182,6 +183,15 @@ pure function pbc_ORTO(dr, lbox) result(dr_min)
    real(rk)             :: dr_min(3)
    dr_min = dr - lbox * nint(dr / lbox)
 end function pbc_ORTO
+!====================================================================
+!  Volumen de la celda = det(A)
+!====================================================================
+pure real(rk) function cell_volume(c) result(vol)
+   type(Cell), intent(in) :: c
+   vol = c%A(1,1)*(c%A(2,2)*c%A(3,3) - c%A(2,3)*c%A(3,2)) &
+       - c%A(1,2)*(c%A(2,1)*c%A(3,3) - c%A(2,3)*c%A(3,1)) &
+       + c%A(1,3)*(c%A(2,1)*c%A(3,2) - c%A(2,2)*c%A(3,1))
+end function cell_volume
 !====================================================================
 !  ────────── utilidades internas ──────────
 !  Inversa 3×3 por cofactores                             (det ≠ 0)

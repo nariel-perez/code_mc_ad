@@ -23,6 +23,18 @@ acelz       20.0        ! Longitud en z
 ! anguy       90.0      ! Ángulo beta (grados)
 ! anguz       90.0      ! Ángulo gamma (grados)
 
+! --- Ejemplo de celda triclínica ---
+! Para usar una celda triclínica, descomentar los ángulos y ajustar:
+! acelx       10.0
+! acely       12.0
+! acelz       8.0
+! angux       80.0      ! alpha (ángulo entre b y c)
+! anguy       85.0      ! beta  (ángulo entre a y c)
+! anguz       75.0      ! gamma (ángulo entre a y b)
+! bcx         1         ! PBC en las tres direcciones
+! bcy         1
+! bcz         1
+
 ! --- Condiciones de borde periódicas ---
 bcx         1           ! PBC en x (1=sí, 0=no)
 bcy         1           ! PBC en y

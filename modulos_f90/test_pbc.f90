@@ -7,9 +7,13 @@
 ! 3. wrap_by_pbc funciona correctamente
 ! 4. Celda triclínica simple se construye sin errores
 ! 5. cellR (celda reducida) se construye correctamente
+! 7. min_image triclínico: |dr|² = s^T G s
+! 8. cell_volume triclínico vs fórmula analítica
+! 9. Round-trip reducidas→Å: frac_to_cart(cell, cart_to_frac(cellR, r)) ≈ r*ACEL
 !--------------------------------------------------------------------
 program test_pbc
-   use PBC_Mod, only: rk, Cell_t => Cell, cell_from_lengths_angles, min_image
+   use PBC_Mod, only: rk, Cell_t => Cell, cell_from_lengths_angles, min_image, &
+                      cell_volume, cart_to_frac, frac_to_cart
    use GeomUtils
    use InputParams, only: ip_cell => cell, ip_cellR => cellR, &
                           acelx, acely, acelz, ACEL, &
@@ -24,7 +28,13 @@ program test_pbc
    real(rk) :: G(3,3), Ainv(3,3)
    logical :: pbcx, pbcy, pbcz
    real(rk) :: tol, diff
-   integer :: i, ntest, npass
+   real(rk) :: vol_calc, vol_formula
+   real(rk) :: a_t, b_t, c_t, alp_t, bet_t, gam_t
+   real(rk) :: cosa_t, cosb_t, cosg_t
+   real(rk) :: pi
+   real(rk) :: dr_tri(3), s_tri(3), G_metric(3,3), dist2_cart, dist2_metric
+   real(rk) :: r_red(3), s_rt(3), r_ang(3), r_expected(3)
+   integer :: i, j, ntest, npass
 
    tol = 1.0e-10_rk
    ntest = 0
@@ -259,6 +269,134 @@ program test_pbc
       npass = npass + 1
    else
       write(*,*) "  [FAIL] cellR NO tiene mismos PBC que cell"
+   end if
+   write(*,*)
+
+   !-----------------------------------------------------------------
+   ! TEST 7: min_image triclínico — |dr|² = s^T G s
+   !-----------------------------------------------------------------
+   write(*,*) "TEST 7: min_image triclinico (|dr|^2 = s^T G s)"
+   write(*,*) "-------------------------------------------------"
+
+   a_t = 10._rk; b_t = 12._rk; c_t = 8._rk
+   alp_t = 80._rk; bet_t = 85._rk; gam_t = 75._rk
+
+   call cell_from_lengths_angles(c, a_t, b_t, c_t, alp_t, bet_t, gam_t, &
+                                 dim=3, centered=.true.)
+   c%pbc = [.true., .true., .true.]
+
+   ! Dos puntos que cruzan bordes
+   r1 = [4.5_rk, 5.5_rk, 3.8_rk]
+   r2 = [-4.0_rk, -5.0_rk, -3.5_rk]
+
+   dr_tri = min_image(c, r1, r2)
+   dist2_cart = sum(dr_tri**2)
+
+   ! Fraccionales del vector mínima imagen
+   s_tri = matmul(c%Ainv, dr_tri)
+
+   ! Tensor métrico G = A^T · A
+   do i = 1, 3
+      do j = 1, 3
+         G_metric(i,j) = dot_product(c%A(:,i), c%A(:,j))
+      end do
+   end do
+
+   ! |dr|² = s^T G s
+   dist2_metric = 0._rk
+   do i = 1, 3
+      do j = 1, 3
+         dist2_metric = dist2_metric + s_tri(i) * G_metric(i,j) * s_tri(j)
+      end do
+   end do
+
+   write(*,'(A,F12.6)') "  |dr|^2 (cartesiano):  ", dist2_cart
+   write(*,'(A,F12.6)') "  s^T G s (metrico):    ", dist2_metric
+
+   ntest = ntest + 1
+   if (abs(dist2_cart - dist2_metric) < tol) then
+      write(*,*) "  [PASS] |dr|^2 = s^T G s"
+      npass = npass + 1
+   else
+      write(*,'(A,ES12.4)') "  [FAIL] Diferencia: ", abs(dist2_cart - dist2_metric)
+   end if
+   write(*,*)
+
+   !-----------------------------------------------------------------
+   ! TEST 8: cell_volume triclínico vs fórmula analítica
+   !-----------------------------------------------------------------
+   write(*,*) "TEST 8: cell_volume triclinico vs formula analitica"
+   write(*,*) "---------------------------------------------------"
+
+   ! Usar la misma celda del test 7: (10, 12, 8, 80, 85, 75)
+   vol_calc = cell_volume(c)
+
+   ! Fórmula: V = abc * sqrt(1 - cos²α - cos²β - cos²γ + 2·cosα·cosβ·cosγ)
+   pi = acos(-1._rk)
+   cosa_t = cos(alp_t * pi / 180._rk)
+   cosb_t = cos(bet_t * pi / 180._rk)
+   cosg_t = cos(gam_t * pi / 180._rk)
+   vol_formula = a_t * b_t * c_t * sqrt(1._rk - cosa_t**2 - cosb_t**2 - cosg_t**2 &
+                 + 2._rk * cosa_t * cosb_t * cosg_t)
+
+   write(*,'(A,F12.6)') "  cell_volume:  ", vol_calc
+   write(*,'(A,F12.6)') "  V analitico:  ", vol_formula
+
+   ntest = ntest + 1
+   if (abs(vol_calc - vol_formula) < 1.0e-8_rk) then
+      write(*,*) "  [PASS] cell_volume coincide con formula"
+      npass = npass + 1
+   else
+      write(*,'(A,ES12.4)') "  [FAIL] Diferencia: ", abs(vol_calc - vol_formula)
+   end if
+   write(*,*)
+
+   !-----------------------------------------------------------------
+   ! TEST 9: Round-trip reducidas→Å
+   !   frac_to_cart(cell, cart_to_frac(cellR, r)) ≈ r * ACEL
+   !-----------------------------------------------------------------
+   write(*,*) "TEST 9: Round-trip reducidas -> Angstroms"
+   write(*,*) "-----------------------------------------"
+
+   ! Configurar celda ortorrómbica para verificar el flujo XYZ de Main
+   acelx = 40.0_rk
+   acely = 40.0_rk
+   acelz = 20.0_rk
+   ACEL = 40.0_rk
+   angux = 90.0_rk
+   anguy = 90.0_rk
+   anguz = 90.0_rk
+   BCX = 1; BCY = 1; BCZ = 0
+   dim_flag = 3
+
+   call cell_from_lengths_angles(ip_cell, acelx, acely, acelz, &
+                                 angux, anguy, anguz, &
+                                 dim=dim_flag, centered=.true.)
+   ip_cell%pbc = [ BCX /= 0, BCY /= 0, BCZ /= 0 ]
+   ip_cell%dim = dim_flag
+   call update_cellR()
+
+   ! Punto arbitrario en unidades reducidas (dentro de cellR)
+   r_red = [0.15_rk, -0.23_rk, 0.08_rk]
+
+   ! Round-trip: reducidas → fraccionales de cellR → cartesianas de cell (Å)
+   s_rt = cart_to_frac(ip_cellR, r_red)
+   r_ang = frac_to_cart(ip_cell, s_rt)
+
+   ! Esperado: r_red * ACEL (para ortorrómbico simple)
+   r_expected = r_red * ACEL
+
+   write(*,'(A,3F12.6)') "  r_red:       ", r_red
+   write(*,'(A,3F12.6)') "  round-trip:  ", r_ang
+   write(*,'(A,3F12.6)') "  r*ACEL:      ", r_expected
+
+   ntest = ntest + 1
+   diff = sqrt(sum((r_ang - r_expected)**2))
+   if (diff < 1.0e-8_rk) then
+      write(*,'(A,ES12.4)') "  [PASS] Diferencia: ", diff
+      npass = npass + 1
+   else
+      write(*,'(A,ES12.4)') "  [FAIL] Diferencia: ", diff
    end if
    write(*,*)
 

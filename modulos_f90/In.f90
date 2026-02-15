@@ -41,7 +41,7 @@ SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANON
   REAL :: RANF, DUMMY, RMIN
   INTEGER :: NTRIAL
   LOGICAL :: OVRLAP
-  REAL :: XMAX, YMAX, ZMAX
+  REAL(rk) :: s_new(3), pos_new(3)
   INTEGER :: MOLKIND
   INTEGER :: I
   REAL :: DX, DY, DZ
@@ -55,26 +55,26 @@ SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANON
   EYNEW = 0.0
   EZNEW = 0.0
 
-  ! Dimensiones de celda reducida
-  XMAX = real(cellR%a_len)
-  YMAX = real(cellR%b_len)
-  ZMAX = real(cellR%c_len)
-  
   CREATE = .FALSE.
   BETA = 1.0 / TEMP
   RMIN = 0.75 * SIGMA
   DELTW = 0.0
-  
+
   ! Elegir tipo de molécula
   MOLKIND = INT(RANF(DUMMY) * NMOLEC) + 1
   NTRIAL = N(MOLKIND) + 1
-  
+
   IF (NTRIAL >= NMAX) RETURN
-  
-  ! Generar la posición del centro de masa del átomo de prueba
-  RXNEW = (RANF(DUMMY) - 0.5) * XMAX
-  RYNEW = (RANF(DUMMY) - 0.5) * YMAX
-  RZNEW = (RANF(DUMMY) - 0.5) * ZMAX
+
+  ! Generar posición del centro de masa en fraccionales uniformes [-0.5, 0.5)
+  ! y convertir a Cartesianas reducidas
+  s_new = [real(RANF(DUMMY),rk) - 0.5_rk, &
+           real(RANF(DUMMY),rk) - 0.5_rk, &
+           real(RANF(DUMMY),rk) - 0.5_rk]
+  pos_new = frac_to_cart(cellR, s_new)
+  RXNEW = real(pos_new(1))
+  RYNEW = real(pos_new(2))
+  RZNEW = real(pos_new(3))
   
   ! Generar la nueva posición
   DO I = 1, NATOM(MOLKIND)
@@ -120,14 +120,14 @@ SUBROUTINE IN(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, CREATE, CR, JPASOS, CANON
      pos = [real(RX1(I),rk), real(RY1(I),rk), real(RZ1(I),rk)]
      s = cart_to_frac(cellR, pos)
      call wrap_by_pbc(s(1), s(2), s(3), cellR%pbc(1), cellR%pbc(2), cellR%pbc(3))
+     ! Rechazar si fuera de caja en ejes no periódicos
+     if (.not. cellR%pbc(1) .and. abs(s(1)) > 0.5_rk) RETURN
+     if (.not. cellR%pbc(2) .and. abs(s(2)) > 0.5_rk) RETURN
+     if (.not. cellR%pbc(3) .and. abs(s(3)) > 0.5_rk) RETURN
      pos = frac_to_cart(cellR, s)
      RX1(I) = real(pos(1))
      RY1(I) = real(pos(2))
      RZ1(I) = real(pos(3))
-
-     IF (ABS(RX1(I)) > 0.5) RETURN
-     IF (ABS(RY1(I)) > 0.5) RETURN
-     IF (ABS(RZ1(I)) > 0.5) RETURN
   END DO
   
   ! Calcular el potencial de adsorción

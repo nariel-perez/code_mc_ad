@@ -1,6 +1,6 @@
 MODULE EstructuraModule
   USE PBC_Mod, only: rk
-  USE InputParams, only: acel, acelx, acely, acelz
+  USE InputParams, only: acel, acelx, acely, acelz, cell
   USE PhysicalConstants
   USE SimulationData
     IMPLICIT NONE
@@ -15,6 +15,7 @@ CONTAINS
         REAL, INTENT(IN) :: sigma
         INTEGER, INTENT(INOUT) :: NC
         INTEGER :: imax, i, io_status, ipos
+        real(rk) :: pos_ang(3), s(3)
 
         ! Dynamic arrays
         REAL, ALLOCATABLE :: RXA(:), RYA(:), RZA(:)
@@ -73,10 +74,10 @@ CONTAINS
             ! Convert charge units
             QAC(i) = QAC(i) * FACTORELEC * FCLEC
 
-            ! Check if the atom is inside the box
-            IF (RXA(i) >= -ACELX/2 .AND. RXA(i) <= ACELX/2 .AND. &
-                RYA(i) >= -ACELY/2 .AND. RYA(i) <= ACELY/2 .AND. &
-                RZA(i) >= -ACELZ/2 .AND. RZA(i) <= ACELZ/2) THEN
+            ! Check if the atom is inside the box (fractional coords)
+            pos_ang = [real(RXA(i),rk), real(RYA(i),rk), real(RZA(i),rk)]
+            s = matmul(cell%Ainv, pos_ang)
+            IF (all(abs(s) <= 0.5_rk)) THEN
 
                 imax = imax + 1
                 RXC(imax) = RXA(i) / SIGMETANO * SIGMA

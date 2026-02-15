@@ -68,6 +68,7 @@
 !C    *******************************************************************
 
 program main
+  use PBC_Mod, only: rk, cell_volume, frac_to_cart, cart_to_frac
   use InputParams
   use simulationdata
   use AdsorbateInput
@@ -102,7 +103,7 @@ program main
    integer           IPASOS, JPASOS, KPASOS
    integer           MULT
    real              PRED
-   real              VOL, XMAX, YMAX, ZMAX
+   real              VOL
    integer           NC
    integer           I, J
    real              X1, Y1, Z1
@@ -133,6 +134,7 @@ program main
    integer           ntotalGRAF
    real, parameter   :: AK_input = 8.31   ! constante de los gases en j/mol·K
    integer           auxmat
+   real(rk)          :: pos_r(3), s_frac(3), pos_ang(3)
 
    
    
@@ -176,10 +178,7 @@ program main
    PRED  = P * SIGMA**3 / eps
    RCUT  = 10*SIGMA
    
-   XMAX = acelx / acel
-   YMAX = acely / acel
-   ZMAX = acelz / acel
-   VOL  = XMAX * YMAX * ZMAX
+   VOL  = real(cell_volume(cellR))
    
    write(*,*)
    write(*,*) '-------------------------------------------------'
@@ -542,9 +541,12 @@ program main
          do j = 1, N(I)
             jin = locate(j,I)
             do k = 1, NATOM(I)
-               RXN = RX(jin,k,I)*acel
-               RYN = RY(jin,k,I)*acel
-               RZN = RZ(jin,k,I)*acel
+               pos_r = [real(RX(jin,k,I),rk), real(RY(jin,k,I),rk), real(RZ(jin,k,I),rk)]
+               s_frac = cart_to_frac(cellR, pos_r)
+               pos_ang = frac_to_cart(cell, s_frac)
+               RXN = real(pos_ang(1))
+               RYN = real(pos_ang(2))
+               RZN = real(pos_ang(3))
                write(40,*) NSYM(k,I), RXN, RYN, RZN
             end do
          end do
