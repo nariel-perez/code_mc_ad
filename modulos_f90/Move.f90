@@ -75,7 +75,7 @@ SUBROUTINE MOVE(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS)
 
     ! Seleccionar un elemento aleatorio de la parte activa de LOCATE
     b = RANF(DUMMY)
-    NLOC = INT(REAL(NTRIAL) * b) + 1
+    NLOC = MIN(N(MOLKIND), INT(REAL(N(MOLKIND)) * b) + 1)
     IPULL = LOCATE(NLOC, MOLKIND)
 
     ! Guardar las posiciones actuales de los átomos

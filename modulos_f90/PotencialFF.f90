@@ -13,7 +13,7 @@ SUBROUTINE POTENCIALFF(EPS, sigma, sigmetano, NC, RCUT, diel)
     INTEGER :: NC, NKIND, INKIND, KINDI, IPOT, JPOT, I
     REAL :: PI, RCELE, SIGMA1, FACTOR, RCUTSQ, SIGSQ, SIGCUB, RMIN, RMINSQ
     REAL :: SR3, SR9, SR2, SR6, VLRC0, WLRC0, DELTV, DELTW, RZI, RIJSQ, VIJ, WIJ, VIJE1
-    REAL :: EPS, sigma, sigmetano, RCUT, diel, REDELEC
+    REAL :: EPS, sigma, sigmetano, RCUT, diel
     INTEGER :: IOSTAT
     ! Inicialización de constantes
     PI = 3.14159265
@@ -27,10 +27,10 @@ SUBROUTINE POTENCIALFF(EPS, sigma, sigmetano, NC, RCUT, diel)
         RETURN
     END IF
 
-    ! Leer número de tipos de moléculas y factor de reducción electrostática
-    READ(11, *, IOSTAT=IOSTAT) NKIND, REDELEC
+    ! Leer número de tipos de moléculas
+    READ(11, *, IOSTAT=IOSTAT) NKIND
     IF (IOSTAT /= 0 .OR. NKIND <= 0) THEN
-        WRITE(*, *) "Error al leer NKIND o REDELEC"
+        WRITE(*, *) "Error al leer NKIND"
         CLOSE(11)
         RETURN
     END IF

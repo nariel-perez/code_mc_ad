@@ -148,9 +148,7 @@ program main
    ! LECTURA DE ENTRADA
    ! ----------------------------------------------------------------
 
-   call read_input('input.txt')  
-
-   call print_params()
+   call read_input('input.txt')
 
    auxmat = int(mat/2)
    allocate(uads(-auxmat:auxmat, -auxmat:auxmat, -auxmat:auxmat, 50))
@@ -364,9 +362,10 @@ program main
       else
          do INMOLEC = 1, NMOLEC
             Z(INMOLEC) = X(INMOLEC)*P*6.023E-4*((ACEL)**3)*VOL
-            Z(NMOLEC)  = 55.55*6.023E-4*((ACEL)**3)*VOL
             write(*,*) Z(INMOLEC), 'Z ', INMOLEC
          end do
+         ! Forzar actividad de la última especie (agua) a concentración pura
+         Z(NMOLEC) = 55.55*6.023E-4*((ACEL)**3)*VOL
       end if
       
       ! Calores isostéricos (acumuladores en cero)

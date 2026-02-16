@@ -14,8 +14,8 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
   INTEGER :: NC, NKIND, INKIND, KINDI, IPOT, I, IJ, K, J
   REAL :: PI, RCELE, EPSIINKIND, SIGMINKIND, QINKIND, SIGMETANO, SIGMA, EPS
   REAL :: RXI, RYI, RZI, DELTV, SIGMA1, FACTOR, RCUTSQ, SIGSQ, SIGCUB
-  REAL :: RMIN, RMINSQ, SR3, SR9, SR2, SR6, DELTW
-  REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, RIJ, VIJ, WIJ, VIJR, ZESACT, ZI
+  REAL :: RMIN, RMINSQ, SR3, SR9, SR2, SR6
+  REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, RIJ, VIJ, VIJR, ZESACT, ZI
   REAL :: diel, RCUT
   REAL(rk) :: dr(3)  ! Vector mínima imagen
   INTEGER :: IOSTAT
@@ -98,7 +98,6 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
                        VIJ = SR6 * (SR6 - 1.0) * FACTOR
                        IF (RIJSQ > (8 * RMIN)**2) VIJ = 0.0
                        
-                       WIJ = SR6 * (SR6 - 0.5) * FACTOR
                        IF (RIJSQ < RCELE**2) THEN
                           RIJ = SQRT(RIJSQ)
                           ZESACT = QAC(J)
@@ -110,7 +109,6 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
                     END IF
                     
                     DELTV = DELTV + 4 * VIJ + VIJR
-                    DELTW = DELTW + WIJ
                     END DO
                     
                     UADS(K, IJ, I, IPOT) = DELTV

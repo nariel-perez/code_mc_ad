@@ -46,11 +46,12 @@ SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICAL
 
     ! Elegir tipo de molécula
     MOLKIND = INT(RANF(DUMMY) * NMOLEC) + 1
+    IF (N(MOLKIND) <= 0) RETURN
     NTRIAL = N(MOLKIND) - 1
 
     ! Seleccionar un elemento aleatorio de la parte activa de LOCATE
     b = RANF(DUMMY)
-    NLOC = INT(REAL(NTRIAL) * b) + 1
+    NLOC = MIN(N(MOLKIND), INT(REAL(N(MOLKIND)) * b) + 1)
     IPULL = LOCATE(NLOC, MOLKIND)
 
     ! Calcular el cambio de energía al eliminar el átomo IPULL

@@ -37,7 +37,7 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
 
     ! Variables locales
     REAL :: RXI, RYI, RZI
-    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ, DELTW
+    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ
     INTEGER :: J, JIN
     INTEGER :: I1
     INTEGER :: IPOT, JPOT
@@ -48,7 +48,6 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
 
     ! Inicialización de acumuladores
     DELTV = 0.0
-    DELTW = 0.0
 
     ! Bucle sobre todos los átomos de la molécula
     DO I1 = 1, NATOM(MOLKIND)
@@ -86,7 +85,6 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
 
                         ! Acumular el potencial total
                         DELTV = DELTV + VIJ
-                        DELTW = DELTW + WIJ
                     END DO
                 END DO
             ELSE
@@ -118,7 +116,6 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
 
                             ! Acumular el potencial total
                             DELTV = DELTV + VIJ
-                            DELTW = DELTW + WIJ
                         END DO
                     END IF
                 END DO
@@ -126,9 +123,8 @@ SUBROUTINE POTOUT(IPULL, MOLKIND, DELTV)
         END DO
     END DO
 
-    ! Cambiar el signo de DELTV y DELTW para una eliminación
+    ! Cambiar el signo de DELTV para una eliminación
     DELTV = -DELTV
-    DELTW = -DELTW
 
     RETURN
 END SUBROUTINE POTOUT
