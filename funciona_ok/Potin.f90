@@ -35,9 +35,9 @@ SUBROUTINE POTIN(MOLKIND, SIGMA, RCUT, RMIN, DELTV, OVRLAP)
     LOGICAL :: OVRLAP
 
     ! Variables locales
-    REAL :: RXI, RYI, RZI, DELTW
+    REAL :: RXI, RYI, RZI
     REAL :: RCUTSQ, RMINSQ, SIGSQ
-    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ, WIJ
+    REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, VIJ
     INTEGER :: J, JIN
     INTEGER :: I1
     INTEGER :: IPOT, JPOT
@@ -58,7 +58,6 @@ SUBROUTINE POTIN(MOLKIND, SIGMA, RCUT, RMIN, DELTV, OVRLAP)
 
     ! Inicialización de acumuladores
     DELTV = 0.0
-    DELTW = 0.0
 
     ! Bucle sobre todos los átomos de la molécula
     DO I1 = 1, NATOM(MOLKIND)
@@ -105,7 +104,6 @@ SUBROUTINE POTIN(MOLKIND, SIGMA, RCUT, RMIN, DELTV, OVRLAP)
 
                     ! Acumular el potencial total
                     DELTV = DELTV + VIJ
-                    DELTW = DELTW + WIJ
                 END DO
             END DO
         END DO

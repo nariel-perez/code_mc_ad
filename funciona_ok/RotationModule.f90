@@ -3,7 +3,7 @@ MODULE RotationModule
 
     ! Constants
     INTEGER, PARAMETER :: TABLA_SIZE = 1000  ! Number of precomputed values
-    REAL, PARAMETER :: PI = 3.14159
+    REAL, PARAMETER :: PI = ACOS(-1.0)
     REAL, PARAMETER :: PASO = (2.0*PI )/ (TABLA_SIZE - 1)  ! Step size
 
     ! Lookup tables for sine and cosine values
@@ -39,9 +39,9 @@ CONTAINS
 
         
         ! Compute indices for lookup
-        INDICE_DX = INT((DX +PI) / PASO) + 1
-        INDICE_DY = INT((DY +PI) / PASO) + 1
-        INDICE_DZ = INT((DZ +PI) / PASO) + 1
+        INDICE_DX = MIN(TABLA_SIZE, MAX(1, INT((DX + PI) / PASO) + 1))
+        INDICE_DY = MIN(TABLA_SIZE, MAX(1, INT((DY + PI) / PASO) + 1))
+        INDICE_DZ = MIN(TABLA_SIZE, MAX(1, INT((DZ + PI) / PASO) + 1))
 
         ! Get precomputed sine and cosine values
         SEN_DX = TABLE_SEN(INDICE_DX)

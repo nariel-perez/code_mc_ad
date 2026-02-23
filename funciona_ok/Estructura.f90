@@ -81,6 +81,8 @@ CONTAINS
                 RYC(imax) = RYA(i) / SIGMETANO * SIGMA
                 RZC(imax) = RZA(i) / SIGMETANO * SIGMA
                 QAC(imax) = QAC(i)
+                EPSAC(imax) = EPSAC(i)
+                SGC(imax) = SGC(i)
                 WRITE(49, *) RXC(imax), RYC(imax), RZC(imax)
             END IF
         END DO

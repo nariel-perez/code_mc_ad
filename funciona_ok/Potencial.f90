@@ -11,12 +11,13 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
   IMPLICIT NONE
   ! Declaración de variables
   INTEGER :: NC, NKIND, INKIND, KINDI, IPOT, I, IJ, K, J
-  REAL :: PI, RCELE, EPSIINKIND, SIGMINKIND, QINKIND, SIGMETANO, SIGMA, EPS
+  REAL :: PI, RCELE, REDELEC, EPSIINKIND, SIGMINKIND, QINKIND, SIGMETANO, SIGMA, EPS
   REAL :: RXI, RYI, RZI, DELTV, SIGMA1, FACTOR, RCUTSQ, SIGSQ, SIGCUB
   REAL :: RMIN, RMINSQ, SR3, SR9, SR2, SR6, DELTW
   REAL :: RXIJ, RYIJ, RZIJ, RIJSQ, RIJ, VIJ, WIJ, VIJR, ZESACT, ZI
   REAL :: diel, xmax, ymax, zmax, RCUT
   INTEGER :: IOSTAT
+  CHARACTER(LEN=256) :: linebuf
   
   ! Inicialización de constantes
   PI = 3.14159265
@@ -34,8 +35,18 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
      RETURN
   END IF
   
-  ! Leer número de tipos de moléculas
-    READ(11, *, IOSTAT=IOSTAT) NKIND
+  ! Leer número de tipos de moléculas (acepta 1 o 2 valores en la línea)
+    READ(11, '(A)', IOSTAT=IOSTAT) linebuf
+    IF (IOSTAT /= 0) THEN
+       WRITE(*, *) "Error al leer la primera línea de LJ.dat"
+       CLOSE(11)
+       RETURN
+    END IF
+    REDELEC = RCELE
+    READ(linebuf, *, IOSTAT=IOSTAT) NKIND, REDELEC
+    IF (IOSTAT /= 0) THEN
+       READ(linebuf, *, IOSTAT=IOSTAT) NKIND
+    END IF
     IF (IOSTAT /= 0 .OR. NKIND <= 0) THEN
        WRITE(*, *) "Error al leer NKIND"
        CLOSE(11)
@@ -69,6 +80,7 @@ SUBROUTINE POTENCIAL(EPS, sigma, sigmetano, NC, RCUT, diel)
               DO K = -mat/2, mat/2
                  RXI = REAL(K) / REAL(mat)
                  DELTV = 0.0
+                 DELTW = 0.0
                  VIJ = 0.0
                  VIJR = 0.0
                  

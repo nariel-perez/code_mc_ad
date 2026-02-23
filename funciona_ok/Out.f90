@@ -47,6 +47,7 @@ SUBROUTINE OUT(TEMP, Z, SIGMA, EPS, RCUT, V, VA, VG, W, GHOST, JPASOS, CANONICAL
     ! Elegir tipo de molécula
     MOLKIND = INT(RANF(DUMMY) * NMOLEC) + 1
     NTRIAL = N(MOLKIND) - 1
+    IF (N(MOLKIND) <= 0) RETURN
 
     ! Seleccionar un elemento aleatorio de la parte activa de LOCATE
     b = RANF(DUMMY)

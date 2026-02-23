@@ -105,6 +105,7 @@ program main
    real              VOL, XMAX, YMAX, ZMAX
    integer           NC
    integer           I, J
+   integer           NKIND, KATOM
    real              X1, Y1, Z1
    integer           INMOLEC
    real              CR
@@ -206,12 +207,54 @@ program main
 
    call read_adsorbates('MOLEC.DAT',sigma,  1.0e-7)
    
+   ! ----------------------------------------------------------------
+   ! LECTURA DE NKIND DESDE LJ.dat (para dimensionar tablas por tipo)
+   ! ----------------------------------------------------------------
+   block
+      integer :: ios, iu
+      real :: redelec
+      character(len=256) :: linebuf
+      iu = 12
+      open(unit=iu, file='LJ.dat', status='old', action='read', iostat=ios)
+      if (ios /= 0) then
+         write(*,*) 'ERROR: no se pudo abrir LJ.dat'
+         stop
+      end if
+      read(iu, '(A)', iostat=ios) linebuf
+      if (ios /= 0) then
+         write(*,*) 'ERROR: no se pudo leer la primera linea de LJ.dat'
+         close(iu)
+         stop
+      end if
+      redelec = 0.0
+      read(linebuf, *, iostat=ios) NKIND, redelec
+      if (ios /= 0) then
+         read(linebuf, *, iostat=ios) NKIND
+      end if
+      close(iu)
+      if (ios /= 0 .or. NKIND <= 0) then
+         write(*,*) 'ERROR: NKIND invalido en LJ.dat'
+         stop
+      end if
+   end block
+   
+   ! Validar que los tipos atomicos de MOLEC.DAT existan en LJ.dat
+   do I = 1, NMOLEC
+      do KATOM = 1, NATOM(I)
+         if (NATOMKIND(KATOM, I) < 1 .or. NATOMKIND(KATOM, I) > NKIND) then
+            write(*,*) 'ERROR: tipo atomico fuera de rango en MOLEC.DAT'
+            write(*,*) 'Molecula:', I, 'Atomo:', KATOM, 'Tipo:', NATOMKIND(KATOM, I), 'NKIND:', NKIND
+            stop
+         end if
+      end do
+   end do
+   
    if (.not. allocated(Z))    allocate(Z(NMOLEC))
    if (.not. allocated(N))    allocate(N(NMOLEC))
    
-   if (.not. allocated(EPSI)) allocate(EPSI(maxAtoms))
-   if (.not. allocated(SIGM)) allocate(SIGM(maxAtoms))
-   if (.not. allocated(Q))    allocate(Q(maxAtoms))
+   if (.not. allocated(EPSI)) allocate(EPSI(NKIND))
+   if (.not. allocated(SIGM)) allocate(SIGM(NKIND))
+   if (.not. allocated(Q))    allocate(Q(NKIND))
    
    if (.not. allocated(RX1))  allocate(RX1(maxAtoms))
    if (.not. allocated(RY1))  allocate(RY1(maxAtoms))
@@ -219,7 +262,7 @@ program main
    if (.not. allocated(RX))   allocate(RX(5000, maxAtoms, NMOLEC))
    if (.not. allocated(RY))   allocate(RY(5000, maxAtoms, NMOLEC))
    if (.not. allocated(RZ))   allocate(RZ(5000, maxAtoms, NMOLEC))
-   if (.not. allocated(USS))  allocate(USS(5000, maxAtoms, maxAtoms))
+   if (.not. allocated(USS))  allocate(USS(5000, NKIND, NKIND))
    
    auxmat = int(NCELLMAT/2)
    
@@ -365,9 +408,10 @@ program main
       else
          do INMOLEC = 1, NMOLEC
             Z(INMOLEC) = X(INMOLEC)*P*6.023E-4*((ACEL)**3)*VOL
-            Z(NMOLEC)  = 55.55*6.023E-4*((ACEL)**3)*VOL
             write(*,*) Z(INMOLEC), 'Z ', INMOLEC
          end do
+         ! Forzar actividad de la última especie (agua) si aplica
+         Z(NMOLEC) = 55.55*6.023E-4*((ACEL)**3)*VOL
       end if
       
       ! Calores isostéricos (acumuladores en cero)
@@ -387,7 +431,6 @@ program main
             write(*,*) JPASOS, N(1:NMOLEC)
          end if
          
-         open(unit=51, file='Ener'//CONFIG//'.TXT')
          V  = V / eps
          VG = VG / eps
          VA = VA / eps
@@ -450,7 +493,6 @@ program main
          AN   = AN   + NTOTALB
          N2   = N2   + NTOTALB**2
 
-         close(51)
       end do  ! fin do JPASOS
       
       write(*,*) '-----'
